@@ -11,6 +11,26 @@ public class Category {
 	private String id;
 	
 	private String name;
+	
+	private Status categoryStatus;
+
+	public Category() {
+		super();
+	}
+	
+	public Category(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.categoryStatus = Status.ACTIVE;
+	}
+
+	public Category(String id, String name, Status categoryStatus) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.categoryStatus = categoryStatus;
+	}
 
 	@Override
 	public int hashCode() {
@@ -41,6 +61,14 @@ public class Category {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public Status getCategoryStatus() {
+		return categoryStatus;
+	}
+
+	public void setCategoryStatus(Status categoryStatus) {
+		this.categoryStatus = categoryStatus;
 	}
 
 	public String getId() {

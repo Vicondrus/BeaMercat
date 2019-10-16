@@ -12,9 +12,9 @@ public class Address {
 	
 	private Integer apartment;
 	
-	private Long zipCode;
+	private String zipCode;
 
-	public Address(String country, String city, String street, Integer number, Integer apartment, Long zipCode) {
+	public Address(String country, String city, String street, Integer number, Integer apartment, String zipCode) {
 		super();
 		this.country = country;
 		this.city = city;
@@ -64,11 +64,11 @@ public class Address {
 		this.apartment = apartment;
 	}
 
-	public Long getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 
-	public void setZipCode(Long zipCode) {
+	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 

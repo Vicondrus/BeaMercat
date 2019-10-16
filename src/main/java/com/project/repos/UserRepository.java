@@ -8,6 +8,6 @@ import com.project.entities.User;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 	
-	public User findByName(String name);
+	public User findByUsername(String username);
 
 }

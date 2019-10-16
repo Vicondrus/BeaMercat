@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Product implements Comparable<Product> {
 
 	@Id
-	private String Id;
+	private String id;
 
 	private String name;
 
@@ -19,26 +19,49 @@ public class Product implements Comparable<Product> {
 	private Integer stock;
 
 	private Category category;
+	
+	private Status productStatus;
 
 	public Product() {
 	}
 
 	public Product(String id, String name, Double price, String details, Integer stock, Category category) {
 		super();
-		Id = id;
+		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.details = details;
 		this.stock = stock;
 		this.category = category;
+		this.productStatus = Status.ACTIVE;
+	}
+
+	public Product(String id, String name, Double price, String details, Integer stock, Category category,
+			Status productStatus) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.details = details;
+		this.stock = stock;
+		this.category = category;
+		this.productStatus = productStatus;
+	}
+
+	public Status getProductStatus() {
+		return productStatus;
+	}
+
+	public void setProductStatus(Status productStatus) {
+		this.productStatus = productStatus;
 	}
 
 	public String getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(String id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getName() {
