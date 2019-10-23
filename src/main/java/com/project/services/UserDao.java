@@ -13,12 +13,16 @@ import com.project.entities.Status;
 import com.project.entities.User;
 import com.project.entities.UserType;
 import com.project.repos.UserRepository;
+import com.project.services.interfaces.ProductDaoI;
 import com.project.services.interfaces.UserDaoI;
 
 @Service
 public class UserDao implements UserDaoI {
 	@Autowired
-	UserRepository userRepo;
+	private UserRepository userRepo;
+
+	@Autowired
+	private ProductDaoI productDao;
 
 	@Transactional
 	@Override
@@ -27,7 +31,7 @@ public class UserDao implements UserDaoI {
 			return null;
 		if (userRepo.findByUsername(user.getUsername()) != null)
 			return null;
-		if(user.getUserType() == null)
+		if (user.getUserType() == null)
 			user.setUserType(UserType.CUSTOMER);
 		if (user.getUserType().equals(UserType.CUSTOMER) && user.getShoppingCart() == null)
 			user.setShoppingCart(new ShoppingCart());
@@ -86,20 +90,26 @@ public class UserDao implements UserDaoI {
 
 	@Override
 	public ShoppingCart addToCart(User user, Product product, Integer quant) {
-		// TODO Auto-generated method stub
-		return null;
+		Product found = productDao.getByName(product);
+		removeFromCart(user, product);
+		found.setStock(found.getStock() - quant);
+		return user.addProductToCart(found, quant);
 	}
 
 	@Override
 	public ShoppingCart removeFromCart(User user, Product product) {
-		// TODO Auto-generated method stub
-		return null;
+		Product found = productDao.getByName(product);
+		if (user.removeProduct(product))
+			found.setStock(found.getStock() + user.getShoppingCart().getProductQuantity(product));
+		return user.getShoppingCart();
 	}
 
 	@Override
 	public ShoppingCart updateQuantityCart(User user, Product product, Integer quant) {
-		// TODO Auto-generated method stub
-		return null;
+		Product found = productDao.getByName(product);
+		removeFromCart(user, product);
+		found.setStock(found.getStock() - quant);
+		return user.addProductToCart(found, quant);
 	}
 
 }

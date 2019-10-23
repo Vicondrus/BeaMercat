@@ -103,12 +103,12 @@ public class User {
 		this.password = password;
 	}
 
-	public void addProductToCart(Product product, Integer quant) {
-		shoppingCart.addProductToCart(product, quant);
+	public ShoppingCart addProductToCart(Product product, Integer quant) {
+		return shoppingCart.addProductToCart(product, quant);
 	}
 
-	public void removeProduct(Product product) {
-		shoppingCart.removeProduct(product);
+	public boolean removeProduct(Product product) {
+		return shoppingCart.removeProduct(product);
 	}
 
 	public ShoppingCart getShoppingCart() {

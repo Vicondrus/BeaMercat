@@ -19,12 +19,20 @@ public class ShoppingCart {
 		this.totalPrice = totalPrice;
 	}
 
-	public void addProductToCart(Product product, Integer quant) {
-		products.add(new ProductQuantity(product, quant));
+	public Integer getProductQuantity(Product product) {
+		return products.stream().filter(x -> x.equals(new ProductQuantity(product, 0))).findFirst().get().getQuant();
 	}
 
-	public void removeProduct(Product product) {
-		products.remove(new ProductQuantity(product));
+	public ShoppingCart addProductToCart(Product product, Integer quant) {
+		ProductQuantity pq = new ProductQuantity(product, quant);
+		if (products.contains(pq))
+			products.remove(pq);
+		products.add(pq);
+		return this;
+	}
+
+	public boolean removeProduct(Product product) {
+		return products.remove(new ProductQuantity(product));
 	}
 
 	public List<ProductQuantity> getProducts() {

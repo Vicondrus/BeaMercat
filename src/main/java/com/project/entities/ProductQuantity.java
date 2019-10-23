@@ -61,4 +61,6 @@ public class ProductQuantity {
 	public void setQuant(Integer quant) {
 		this.quant = quant;
 	}
+	
+	
 }

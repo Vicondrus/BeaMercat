@@ -29,7 +29,7 @@ public class ProductDao implements ProductDaoI {
 			return null;
 		if (product.getProductStatus() == null)
 			product.setProductStatus(Status.ACTIVE);
-		return null;
+		return prodRepo.save(product);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class ProductDao implements ProductDaoI {
 		if (found == null) {
 			return null;
 		} else {
-			
+
 			product.setId(found.getId());
 			return prodRepo.save(product);
 		}
@@ -83,7 +83,7 @@ public class ProductDao implements ProductDaoI {
 		if (cat == null)
 			return null;
 		Category fCat = catDao.findByName(cat);
-		if(fCat == null)
+		if (fCat == null)
 			return null;
 		return prodRepo.findAllByCategory(fCat);
 	}
