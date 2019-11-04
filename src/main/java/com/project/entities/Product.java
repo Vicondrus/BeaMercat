@@ -2,6 +2,7 @@ package com.project.entities;
 
 import javax.persistence.Id;
 
+import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -21,6 +22,8 @@ public class Product implements Comparable<Product> {
 	private Category category;
 	
 	private Status productStatus;
+	
+	private Binary image;
 
 	public Product() {
 	}
@@ -33,11 +36,22 @@ public class Product implements Comparable<Product> {
 		this.details = details;
 		this.stock = stock;
 		this.category = category;
+	}
+
+	public Product(String id, String name, Double price, String details, Integer stock, Category category, Binary image) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.details = details;
+		this.stock = stock;
+		this.category = category;
 		this.productStatus = Status.ACTIVE;
+		this.image = image;
 	}
 
 	public Product(String id, String name, Double price, String details, Integer stock, Category category,
-			Status productStatus) {
+			Status productStatus, Binary image) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -46,6 +60,7 @@ public class Product implements Comparable<Product> {
 		this.stock = stock;
 		this.category = category;
 		this.productStatus = productStatus;
+		this.image = image;
 	}
 
 	public Status getProductStatus() {
@@ -114,5 +129,14 @@ public class Product implements Comparable<Product> {
 			return 0;
 		return (this.name.compareTo(o.getName()));
 	}
+
+	public Binary getImage() {
+		return image;
+	}
+
+	public void setImage(Binary image) {
+		this.image = image;
+	}
+
 
 }

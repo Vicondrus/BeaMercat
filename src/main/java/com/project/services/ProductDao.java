@@ -1,9 +1,13 @@
 package com.project.services;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Category;
 import com.project.entities.Product;
@@ -20,6 +24,18 @@ public class ProductDao implements ProductDaoI {
 
 	@Autowired
 	private CategoryDaoI catDao;
+	
+	@Override 
+	public Product saveProductWithImage(Product product, MultipartFile file) throws IOException {
+		if (product == null)
+			return null;
+		if (getByName(product) != null)
+			return null;
+		if (product.getProductStatus() == null)
+			product.setProductStatus(Status.ACTIVE);
+		product.setImage(new Binary(BsonBinarySubType.BINARY,file.getBytes()));
+		return prodRepo.save(product);
+	}
 
 	@Override
 	public Product saveProduct(Product product) {
@@ -44,6 +60,22 @@ public class ProductDao implements ProductDaoI {
 		if (product == null)
 			return null;
 		return prodRepo.findById(product.getId()).orElse(null);
+	}
+	
+	@Override
+	public Product updateProductImage(Product product, MultipartFile file) throws IOException {
+		if(file == null)
+			return updateProduct(product);
+		if(product == null)
+			return null;
+		Product found = getByName(product);
+		if (found == null) {
+			return null;
+		} else {
+			product.setImage(new Binary(BsonBinarySubType.BINARY,file.getBytes()));
+			product.setId(found.getId());
+			return prodRepo.save(product);
+		}
 	}
 
 	@Override

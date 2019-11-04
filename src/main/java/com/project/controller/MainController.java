@@ -1,6 +1,9 @@
 package com.project.controller;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Address;
 import com.project.entities.Category;
@@ -51,12 +55,19 @@ public class MainController {
 
 	@PostMapping("/addProductAux")
 	public String postAddNewProduct(Product product, BindingResult result,
-			@RequestParam("category") String categoryName) {
+			@RequestParam("category") String categoryName, @RequestParam("image") MultipartFile image) {
 		if (result.hasFieldErrors())
 			System.out.println("Something went wrong creating the product");
 		product.setCategory(categoryDao.findByName(new Category(null, categoryName.trim())));
 		// product.setProductStatus(Status.ACTIVE);
-		productDao.saveProduct(product);
+		if (image == null)
+			productDao.saveProduct(product);
+		else
+			try {
+				productDao.saveProductWithImage(product, image);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		return "Saved";
 	}
 
@@ -82,7 +93,13 @@ public class MainController {
 
 	@GetMapping("/listAllProducts")
 	public String getListAllProducts(ModelMap map) {
-		map.addAttribute("list", productDao.getAll());
+		List<Product> p = productDao.getAll();
+		map.addAttribute("list", p);
+		map.addAttribute("images", p.stream().map(x -> {
+			if (x.getImage() == null)
+				return null;
+			return Base64.getEncoder().encodeToString(x.getImage().getData());
+		}).collect(Collectors.toList()));
 		return "showAllProducts";
 	}
 

@@ -7,13 +7,13 @@ public class ShoppingCart {
 
 	private List<ProductQuantity> products;
 
-	private Integer totalPrice;
+	private Double totalPrice;
 
 	public ShoppingCart() {
-		this(new ArrayList<ProductQuantity>(), 0);
+		this(new ArrayList<ProductQuantity>(), 0.0);
 	}
 
-	public ShoppingCart(List<ProductQuantity> products, Integer totalPrice) {
+	public ShoppingCart(List<ProductQuantity> products, Double totalPrice) {
 		super();
 		this.products = products;
 		this.totalPrice = totalPrice;
@@ -43,11 +43,11 @@ public class ShoppingCart {
 		this.products = products;
 	}
 
-	public Integer getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Integer totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 

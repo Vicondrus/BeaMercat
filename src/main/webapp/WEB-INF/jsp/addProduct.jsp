@@ -13,7 +13,7 @@
 </head>
 <body>
 
-	<form action="/addProductAux" method="POST">
+	<form action="/addProductAux" method="POST" enctype="multipart/form-data">
 		<div class="container">
 			<h1>Create Product</h1>
 			<p>Please complete the form below</p>
@@ -43,6 +43,9 @@
 				
 			</select>
 			<hr>
+			
+			<label for="image"><b>Image</b></label> <input type="file" accept="image/*"
+				placeholder="Enter Product Name" name="image">
 
 			<button type="submit" class="registerbtn">Create</button>
 

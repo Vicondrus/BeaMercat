@@ -1,6 +1,9 @@
 package com.project.services.interfaces;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Category;
 import com.project.entities.Product;
@@ -20,5 +23,9 @@ public interface ProductDaoI {
 	public List<Product> getAllByCategory(Category cat);
 
 	List<Product> getAll();
+
+	Product saveProductWithImage(Product product, MultipartFile file) throws IOException;
+
+	Product updateProductImage(Product product, MultipartFile file) throws IOException;
 
 }

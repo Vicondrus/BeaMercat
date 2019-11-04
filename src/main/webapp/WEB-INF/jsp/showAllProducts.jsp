@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
 <html lang="en">
 <meta charset="UTF-8">
 
@@ -17,29 +18,6 @@
 <c:url value="/css/style.css" var="jstlCss" />
 <link href="${jstlCss}" rel="stylesheet" />
 
-<style>
-<script type="text/javascript">
-    $(document).ready(function() {
-     $('#ibutton').click(function(e) {
-     e.preventDefault();
-     var ajaxdata = $("#country").val();
-     var value ='county='+ajaxdata;
-
-     $.ajax({
-     url: "/mockPost",
-     //type: "post",
-     data: value,
-     cache: false,
-     success: function(data) {
-     $("#quantity").val('');
-     $("#message").html(data).slideDown('slow');
-     }
-     });
-});
-});
-</script>
-</style>
-
 <head>
 
 </head>
@@ -48,6 +26,7 @@
 	<c:if test="${not empty list}">
 		<table style="width: 100%" id="myTable">
 			<tr class="header">
+				<th>Image</th>
 				<th>Name</th>
 				<th>Price</th>
 				<th>Details</th>
@@ -57,8 +36,9 @@
 				<th>Actions</th>
 			</tr>
 
-			<c:forEach var="listValue" items="${list}">
+			<c:forEach var="listValue" items="${list}" varStatus="status">
 				<tr>
+					<td><img alt="no image" height="42" width="42" src="data:image/jpg;base64,${images[status.index]}" /></td>
 					<td>${listValue.name}</td>
 					<td>${listValue.price}</td>
 					<td>${listValue.details}</td>
@@ -72,18 +52,6 @@
 			</c:forEach>
 		</table>
 	</c:if>
-	
-	<form action="/mockPost" method="POST">
-		<div class="container">
-
-			<label for="quant"><b>Quantity</b></label> <input type="text"
-				placeholder="Enter Quantity" name="quant" required>
-			<hr>
-
-			<button type="submit">Add to cart</button>
-
-		</div>
-	</form>
 
 
 </body>
