@@ -2,6 +2,8 @@ package com.project.services.interfaces;
 
 import java.util.List;
 
+import com.project.entities.Address;
+import com.project.entities.Order;
 import com.project.entities.Product;
 import com.project.entities.ShoppingCart;
 import com.project.entities.User;
@@ -25,5 +27,9 @@ public interface UserDaoI {
 	ShoppingCart removeFromCart(User user, Product product);
 	
 	ShoppingCart updateQuantityCart(User user, Product product, Integer quant);
+
+	void discardCart(User user);
+
+	Order placeOrder(User user, Address address);
 
 }

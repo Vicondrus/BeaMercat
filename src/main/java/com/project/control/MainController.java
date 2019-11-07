@@ -1,4 +1,4 @@
-package com.project.controller;
+package com.project.control;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -103,9 +103,11 @@ public class MainController {
 		return "showAllProducts";
 	}
 
-	@PostMapping("/mockPost")
+	@GetMapping("/mockPost")
 	public void postMock(@RequestParam("quant") Integer quantity) {
-		Integer q = quantity;
+		User user = new User();
+		user.setUsername("vald");
+		System.out.println(userDao.getByUsername(user));
 	}
 
 	@GetMapping("/all")
