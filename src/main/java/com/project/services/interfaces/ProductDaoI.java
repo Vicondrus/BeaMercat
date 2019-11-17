@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Category;
 import com.project.entities.Product;
+import com.project.entities.Provider;
 
 public interface ProductDaoI {
 
@@ -27,5 +28,7 @@ public interface ProductDaoI {
 	Product saveProductWithImage(Product product, MultipartFile file) throws IOException;
 
 	Product updateProductImage(Product product, MultipartFile file) throws IOException;
+
+	List<Product> getAllByProvider(Provider provider);
 
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<jsp:include page="customerMenu.jsp" />
+
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">

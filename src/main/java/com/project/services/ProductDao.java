@@ -11,10 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Category;
 import com.project.entities.Product;
+import com.project.entities.Provider;
 import com.project.entities.Status;
 import com.project.repos.ProductRepository;
 import com.project.services.interfaces.CategoryDaoI;
 import com.project.services.interfaces.ProductDaoI;
+import com.project.services.interfaces.ProviderDaoI;
 
 @Service
 public class ProductDao implements ProductDaoI {
@@ -24,8 +26,11 @@ public class ProductDao implements ProductDaoI {
 
 	@Autowired
 	private CategoryDaoI catDao;
-	
-	@Override 
+
+	@Autowired
+	private ProviderDaoI provDao;
+
+	@Override
 	public Product saveProductWithImage(Product product, MultipartFile file) throws IOException {
 		if (product == null)
 			return null;
@@ -33,7 +38,7 @@ public class ProductDao implements ProductDaoI {
 			return null;
 		if (product.getProductStatus() == null)
 			product.setProductStatus(Status.ACTIVE);
-		product.setImage(new Binary(BsonBinarySubType.BINARY,file.getBytes()));
+		product.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
 		return prodRepo.save(product);
 	}
 
@@ -61,18 +66,18 @@ public class ProductDao implements ProductDaoI {
 			return null;
 		return prodRepo.findById(product.getId()).orElse(null);
 	}
-	
+
 	@Override
 	public Product updateProductImage(Product product, MultipartFile file) throws IOException {
-		if(file == null)
+		if (file == null)
 			return updateProduct(product);
-		if(product == null)
+		if (product == null)
 			return null;
 		Product found = getByName(product);
 		if (found == null) {
 			return null;
 		} else {
-			product.setImage(new Binary(BsonBinarySubType.BINARY,file.getBytes()));
+			product.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
 			product.setId(found.getId());
 			return prodRepo.save(product);
 		}
@@ -120,4 +125,13 @@ public class ProductDao implements ProductDaoI {
 		return prodRepo.findAllByCategory(fCat);
 	}
 
+	@Override
+	public List<Product> getAllByProvider(Provider provider) {
+		if (provider == null)
+			return null;
+		Provider fProv = provDao.findByName(provider);
+		if (fProv == null)
+			return null;
+		return prodRepo.findAllByProvider(fProv);
+	}
 }

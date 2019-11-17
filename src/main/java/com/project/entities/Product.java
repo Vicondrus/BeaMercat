@@ -20,15 +20,18 @@ public class Product implements Comparable<Product> {
 	private Integer stock;
 
 	private Category category;
-	
+
 	private Status productStatus;
-	
+
 	private Binary image;
+
+	private Provider provider;
 
 	public Product() {
 	}
 
-	public Product(String id, String name, Double price, String details, Integer stock, Category category) {
+	public Product(String id, String name, Double price, String details, Integer stock, Category category,
+			Provider provider) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -36,9 +39,11 @@ public class Product implements Comparable<Product> {
 		this.details = details;
 		this.stock = stock;
 		this.category = category;
+		this.provider = provider;
 	}
 
-	public Product(String id, String name, Double price, String details, Integer stock, Category category, Binary image) {
+	public Product(String id, String name, Double price, String details, Integer stock, Category category, Binary image,
+			Provider provider) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -48,10 +53,11 @@ public class Product implements Comparable<Product> {
 		this.category = category;
 		this.productStatus = Status.ACTIVE;
 		this.image = image;
+		this.provider = provider;
 	}
 
 	public Product(String id, String name, Double price, String details, Integer stock, Category category,
-			Status productStatus, Binary image) {
+			Status productStatus, Binary image, Provider provider) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -61,6 +67,15 @@ public class Product implements Comparable<Product> {
 		this.category = category;
 		this.productStatus = productStatus;
 		this.image = image;
+		this.provider = provider;
+	}
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
 	}
 
 	public Status getProductStatus() {
@@ -137,6 +152,5 @@ public class Product implements Comparable<Product> {
 	public void setImage(Binary image) {
 		this.image = image;
 	}
-
 
 }

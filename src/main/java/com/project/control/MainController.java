@@ -132,8 +132,14 @@ public class MainController {
 		// u.addProductToCart(p2, 3);
 		// userDao.saveUser(u);
 		// userDao.saveUser(a);
-		List<User> l = userDao.getAll();
+		Category c = categoryDao.findByName(new Category(null, "Articole vestimentare"));
+		List<Product> l = productDao.getAllByCategory(c);
 		map.addAttribute("list", l);
 		return "main";
+	}
+
+	@GetMapping("/home")
+	public String getHome() {
+		return "home";
 	}
 }
