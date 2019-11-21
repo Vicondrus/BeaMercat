@@ -49,7 +49,7 @@ body, html {
 			<p class="w3-large w3-center">Online Shopping</p>
 
 			<div class="w3-display-bottom">
-				<a class="w3-large w3-left" href="overview">Sign in</a> <a
+				<a class="w3-large w3-left" href="main">Sign in</a> <a
 					class="w3-large w3-right" href="register">Register</a>
 			</div>
 

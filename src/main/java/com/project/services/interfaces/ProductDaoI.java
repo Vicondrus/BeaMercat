@@ -31,4 +31,6 @@ public interface ProductDaoI {
 
 	List<Product> getAllByProvider(Provider provider);
 
+	List<Product> getAllActive();
+
 }

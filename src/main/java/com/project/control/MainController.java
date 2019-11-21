@@ -1,7 +1,9 @@
 package com.project.control;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,8 +69,10 @@ public class MainController {
 
 	@GetMapping("/addProduct")
 	public String getAddNewProduct(ModelMap map) {
-		map.addAttribute("categories", categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
-		map.addAttribute("providers",providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
+		map.addAttribute("categories",
+				categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
+		map.addAttribute("providers",
+				providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
 		return "addProduct";
 	}
 
@@ -123,37 +127,39 @@ public class MainController {
 		return "showAllProducts";
 	}
 
-	@GetMapping("/mockPost")
-	public void postMock(@RequestParam("quant") Integer quantity) {
-		User user = new User();
-		user.setUsername("vald");
-		System.out.println(userDao.getByUsername(user));
+	@GetMapping("/user/viewUser")
+	public String getUserViewUser(ModelMap map, Principal principal) {
+		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
+		return "customerViewUser";
+	}
+	
+	@GetMapping("/user/updateUser")
+	public String getUserUpdateUser(ModelMap map, Principal principal) {
+		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
+		return "updateUser";
 	}
 
-	@GetMapping("/all")
+	@GetMapping("user/shoppingCart")
+	public String getUserShoppingCart(ModelMap map, Principal principal) {
+		map.addAttribute("shoppingCart", userDao.getByUsername(new User(principal.getName())).getShoppingCart());
+		return "inspectShoppingCart";
+	}
+
+	@GetMapping("/")
+	public String getRoot() {
+		return "redirect:/home";
+	}
+
+	@GetMapping("/main")
 	public String getAllUsers(ModelMap map) {
-		// This returns a JSON or XML with the users
-		// Address ad = new Address("Romania", "Cluj-Napoca", "Aleea Bucura", 1, 99,
-		// "4000321");
-		// Product p1 = new Product();
-		// p1.setName("CAL");
-		// Product p2 = new Product();
-		// p2.setName("VITEL");
-		// ShoppingCart sc = new ShoppingCart();
-		// Product p3 = new Product();
-		// p3.setName("CAL");
-		// sc.addProductToCart(p1, 2);
-		// sc.addProductToCart(p2, 3);
-		// sc.addProductToCart(p1, 100);
-		// User u = new User(null, "Victor", "lol", "victor.padurean@yahoo.com", ad, sc,
-		// UserType.CUSTOMER);
-		// User a = new User(null, "admin","hr","he", "lol", "admin@gmail.com", "1234");
-		// u.addProductToCart(p1, 2);
-		// u.addProductToCart(p2, 3);
-		// userDao.saveUser(u);
-		// userDao.saveUser(a);
-		Category c = categoryDao.findByName(new Category(null, "Articole vestimentare"));
-		List<Product> l = productDao.getAllByCategory(c);
+		List<Product> l = productDao.getAllActive();
+		Collections.shuffle(l);
+		l = l.stream().limit(5).collect(Collectors.toList());
+		map.addAttribute("images", l.stream().map(x -> {
+			if (x.getImage() == null)
+				return null;
+			return Base64.getEncoder().encodeToString(x.getImage().getData());
+		}).collect(Collectors.toList()));
 		map.addAttribute("list", l);
 		return "main";
 	}

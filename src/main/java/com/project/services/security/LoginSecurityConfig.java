@@ -30,9 +30,9 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/addUser", "/addUserAux").permitAll()
 				.antMatchers("/addProduct", "/addProductAux", "/addCategory", "/addCategoryAux", "/listAllUsers",
-						"/listAllProducts")
+						"/listAllProducts", "/main")
 				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')").and().formLogin().permitAll()
-				.defaultSuccessUrl("/home").and().logout().logoutSuccessUrl("/").and().csrf().disable();
+				.defaultSuccessUrl("/main").and().logout().logoutSuccessUrl("/").and().csrf().disable();
 		http.authorizeRequests().antMatchers("/resources/**").permitAll();
 	}
 

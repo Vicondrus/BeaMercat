@@ -127,7 +127,7 @@ c {
 
 	<div class="navbar">
 		<b><img src="/forest.png" alt="HTML5 Icon"
-			style="width: 32px; height: 32px;"></b> <a href="overview">Home</a>
+			style="width: 32px; height: 32px;"></b> <a href="home">Home</a>
 		<div class="dropdown">
 			<button class="dropbtn">
 				User <i class="fa fa-caret-down"></i>

@@ -42,13 +42,13 @@ public class User {
 		this.username = username;
 		this.email = email;
 		this.shoppingCart = null;
-		this.userType = UserType.ADMIN;
+		this.userType = UserType.CUSTOMER;
 		this.userStatus = Status.ACTIVE;
 		this.telephone = telephone;
 	}
 
-	public User(String id, String username, String firstName, String lastName, String password, String email, Address address, ShoppingCart shoppingCart,
-			UserType userType, String telephone) {
+	public User(String id, String username, String firstName, String lastName, String password, String email,
+			Address address, ShoppingCart shoppingCart, UserType userType, String telephone) {
 		super();
 		this.password = password;
 		this.firstName = firstName;
@@ -61,6 +61,10 @@ public class User {
 		this.userType = userType;
 		this.userStatus = Status.ACTIVE;
 		this.telephone = telephone;
+	}
+
+	public User(String username) {
+		this.username = username;
 	}
 
 	public String getFirstName() {

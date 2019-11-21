@@ -3,6 +3,8 @@ package com.project.services;
 import java.io.IOException;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,5 +135,11 @@ public class ProductDao implements ProductDaoI {
 		if (fProv == null)
 			return null;
 		return prodRepo.findAllByProvider(fProv);
+	}
+
+	@Transactional
+	@Override
+	public List<Product> getAllActive() {
+		return prodRepo.findByProductStatus(Status.ACTIVE);
 	}
 }
