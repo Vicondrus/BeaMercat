@@ -18,9 +18,5 @@
 </head>
 <body>
 
-	<c:forEach items="${list}" var="item">
-    ${item}<br>
-	</c:forEach>
-
 </body>
 </html>

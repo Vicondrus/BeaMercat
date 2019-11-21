@@ -18,4 +18,6 @@ public interface CategoryDaoI {
 
 	List<Category> getAll();
 
+	List<Category> getAllActive();
+
 }

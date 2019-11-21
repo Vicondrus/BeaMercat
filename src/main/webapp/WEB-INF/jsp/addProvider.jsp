@@ -10,20 +10,14 @@
 </head>
 <body>
 
-	<form action="/addUserAux" method="POST">
+	<form action="/addProviderAux" method="POST">
 		<div class="container">
-			<h1>Create User</h1>
+			<h1>Create Provider</h1>
 			<p>Please complete the form below</p>
 			<hr>
 
-			<label for="username"><b>Username</b></label> <input type="text"
-				placeholder="Enter Username" name="username" required> <label
-				for="firstName"><b>First Name</b></label> <input type="text"
-				placeholder="Enter First Name" name="firstName"> <label
-				for="lastName"><b>Last Name</b></label> <input type="text"
-				placeholder="Enter Last Name" name="lastName"> <label
-				for="password"><b>Password</b></label> <input type="password"
-				placeholder="Enter Password" name="password" required> <label
+			<label for="name"><b>Name</b></label> <input type="text"
+				placeholder="Enter Category Name" name="name" required> <label
 				for="email"><b>Email</b></label> <input type="email"
 				placeholder="Enter Email" name="email" required> <label
 				for="country"><b>Country</b></label> <input type="text"

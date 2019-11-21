@@ -41,7 +41,7 @@ public class UserDao implements UserDaoI {
 		if (userRepo.findByUsername(user.getUsername()) != null)
 			return null;
 		if (user.getUserType() == null)
-			user.setUserType(UserType.CUSTOMER);
+			user.setUserType(UserType.ADMIN);
 		if (user.getUserType().equals(UserType.CUSTOMER) && user.getShoppingCart() == null)
 			user.setShoppingCart(new ShoppingCart());
 		user.setUserStatus(Status.ACTIVE);

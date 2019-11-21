@@ -26,6 +26,12 @@ public class CategoryDao implements CategoryDaoI {
 
 	@Transactional
 	@Override
+	public List<Category> getAllActive() {
+		return catRepo.findByCategoryStatus(Status.ACTIVE);
+	}
+
+	@Transactional
+	@Override
 	public Category saveCategory(Category category) {
 		if (category == null)
 			return null;

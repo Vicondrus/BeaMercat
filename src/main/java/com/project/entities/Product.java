@@ -27,6 +27,10 @@ public class Product implements Comparable<Product> {
 
 	private Provider provider;
 
+	public Product(String name) {
+		this.name = name;
+	}
+
 	public Product() {
 	}
 

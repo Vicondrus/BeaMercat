@@ -18,4 +18,6 @@ public interface ProviderDaoI {
 
 	Provider deleteProvider(Provider provider);
 
+	List<Provider> getAllActive();
+
 }

@@ -6,6 +6,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 
+<jsp:include page="generalMenu.jsp" />
+
 <html>
 <head>
 <c:url value="/css/style.css" var="jstlCss" />
@@ -13,7 +15,8 @@
 </head>
 <body>
 
-	<form action="/addProductAux" method="POST" enctype="multipart/form-data">
+	<form action="/addProductAux" method="POST"
+		enctype="multipart/form-data">
 		<div class="container">
 			<h1>Create Product</h1>
 			<p>Please complete the form below</p>
@@ -30,22 +33,34 @@
 				for="category"><b>Category</b></label> <select name="category"
 				required>
 				<%
-					ArrayList<Category> list = new ArrayList<Category>();
-					List<Category> aux = (List<Category>) request.getAttribute("categories");
-					list.addAll(aux);
-					for (Category a : list)
-						if (a.getCategoryStatus().equals(Status.ACTIVE)) {
-				%><option value="<%out.print(a.getName());%>">
+					ArrayList<String> list1 = new ArrayList<String>();
+					List<String> aux1 = (List<String>) request.getAttribute("categories");
+					list1.addAll(aux1);
+					for (String a : list1) {
+				%><option value="<%out.print(a);%>">
 					<%
-						out.print(a.getName());
-							}
+						out.print(a);
+						}
+					%>
+				
+			</select> <label for="provider"><b>Provider</b></label> <select
+				name="provider" required>
+				<%
+					ArrayList<String> listw = new ArrayList<String>();
+					List<String> auxw = (List<String>) request.getAttribute("providers");
+					listw.addAll(auxw);
+					for (String a : listw) {
+				%><option value="<%out.print(a);%>">
+					<%
+						out.print(a);
+						}
 					%>
 				
 			</select>
 			<hr>
-			
-			<label for="image"><b>Image</b></label> <input type="file" accept="image/*"
-				placeholder="Enter Product Name" name="image">
+
+			<label for="image"><b>Image</b></label> <input type="file"
+				accept="image/*" placeholder="Enter Product Name" name="image">
 
 			<button type="submit" class="registerbtn">Create</button>
 

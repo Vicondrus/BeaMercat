@@ -17,10 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.entities.Address;
 import com.project.entities.Category;
 import com.project.entities.Product;
+import com.project.entities.Provider;
 import com.project.entities.Status;
 import com.project.entities.User;
 import com.project.services.interfaces.CategoryDaoI;
 import com.project.services.interfaces.ProductDaoI;
+import com.project.services.interfaces.ProviderDaoI;
 import com.project.services.interfaces.UserDaoI;
 
 @Controller
@@ -35,6 +37,9 @@ public class MainController {
 	@Autowired
 	private ProductDaoI productDao;
 
+	@Autowired
+	private ProviderDaoI providerDao;
+
 	@GetMapping("/addCategory")
 	public String getAddNewCategory() {
 		return "addCategory";
@@ -47,20 +52,35 @@ public class MainController {
 		return "Saved";
 	}
 
+	@GetMapping("/addProvider")
+	public String getAddNewProvider() {
+		return "addProvider";
+	}
+
+	@PostMapping("/addProviderAux")
+	public String postAddNewProvider(Provider provider, Address address, BindingResult result) {
+		provider.setProviderStatus(Status.ACTIVE);
+		provider.setAddress(address);
+		providerDao.saveProvider(provider);
+		return "Saved";
+	}
+
 	@GetMapping("/addProduct")
 	public String getAddNewProduct(ModelMap map) {
-		map.addAttribute("categories", categoryDao.getAll());
+		map.addAttribute("categories", categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
+		map.addAttribute("providers",providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
 		return "addProduct";
 	}
 
 	@PostMapping("/addProductAux")
-	public String postAddNewProduct(Product product, BindingResult result,
-			@RequestParam("category") String categoryName, @RequestParam("image") MultipartFile image) {
+	public String postAddNewProduct(Product product, BindingResult result, String category, String provider,
+			@RequestParam("image") MultipartFile image) {
 		if (result.hasFieldErrors())
 			System.out.println("Something went wrong creating the product");
-		product.setCategory(categoryDao.findByName(new Category(null, categoryName.trim())));
+		product.setProvider(providerDao.findByName(new Provider(provider.trim())));
+		product.setCategory(categoryDao.findByName(new Category(null, category.trim())));
 		// product.setProductStatus(Status.ACTIVE);
-		if (image == null)
+		if (image == null || image.isEmpty())
 			productDao.saveProduct(product);
 		else
 			try {
@@ -82,7 +102,7 @@ public class MainController {
 			System.out.println("Something went wrong creating the user");
 		user.setAddress(address);
 		userDao.saveUser(user);
-		return "Saved";
+		return "home";
 	}
 
 	@GetMapping("/listAllUsers")

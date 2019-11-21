@@ -26,6 +26,12 @@ public class ProviderDao implements ProviderDaoI {
 
 	@Transactional
 	@Override
+	public List<Provider> getAllActive() {
+		return provRepo.findByProviderStatus(Status.ACTIVE);
+	}
+
+	@Transactional
+	@Override
 	public Provider saveProvider(Provider provider) {
 		if (provider == null)
 			return null;

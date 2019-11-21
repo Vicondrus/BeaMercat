@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<jsp:include page="generalMenu.jsp" />
+
 <html>
 <head>
 <c:url value="/css/style.css" var="jstlCss" />

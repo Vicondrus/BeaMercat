@@ -12,23 +12,38 @@ public class Provider {
 
 	private String name;
 
-	private String phone;
+	private String telephone;
+
+	private String email;
 
 	private Address address;
 
 	private Status providerStatus;
 
+	public Provider(String name) {
+		this.name = name;
+	}
+
 	public Provider() {
 
 	}
 
-	public Provider(String id, String name, String phone, Address address, Status status) {
+	public Provider(String id, String name, String phone, Address address, Status status, String email) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.phone = phone;
+		this.telephone = phone;
 		this.address = address;
 		providerStatus = status;
+		this.email = email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Status getProviderStatus() {
@@ -55,12 +70,12 @@ public class Provider {
 		this.name = name;
 	}
 
-	public String getPhone() {
-		return phone;
+	public String getTelephone() {
+		return telephone;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setTelephone(String phone) {
+		this.telephone = phone;
 	}
 
 	public Address getAddress() {
