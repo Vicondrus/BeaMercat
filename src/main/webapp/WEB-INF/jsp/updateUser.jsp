@@ -43,7 +43,7 @@
 </head>
 <body>
 
-	<form action="/admin/updateUserAux" method="POST">
+	<form action="/user/updateUserAux" method="POST">
 		<div class="container">
 			<h1>Update User</h1>
 			<p>Please review your details</p>

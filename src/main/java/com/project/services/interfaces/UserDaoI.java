@@ -32,4 +32,6 @@ public interface UserDaoI {
 
 	Order placeOrder(User user, Address address);
 
+	ShoppingCart updateQuantityCart(User u, Integer[] quant);
+
 }

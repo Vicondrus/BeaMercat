@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+
+<sec:authorize access="hasRole('ROLE_USER')" var="isUser" />
+<sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin" />
 
 
 <html lang="en">
@@ -38,16 +43,21 @@
 
 			<c:forEach var="listValue" items="${list}" varStatus="status">
 				<tr>
-					<td><img alt="no image" height="42" width="42" src="data:image/jpg;base64,${images[status.index]}" /></td>
+					<td><img alt="no image" height="42" width="42"
+						src="data:image/jpg;base64,${images[status.index]}" /></td>
 					<td>${listValue.name}</td>
 					<td>${listValue.price}</td>
 					<td>${listValue.details}</td>
 					<td>${listValue.stock}</td>
 					<td>${listValue.category.name}</td>
 					<td>${listValue.productStatus}</td>
-					<td><a href="viewUser?name=${listValue.name}">Details</a><a>
-							| </a><a href="updateUser?name=${listValue.name}">Update</a><a>
-							| </a><a href="deleteUser?name=${listValue.name}">Delete</a></td>
+					<td><a href="user/viewProduct?id=${listValue.id}">Details</a> <c:if
+							test="${isAdmin}">
+							<a> | </a>
+							<a href="user/updateProduct?id=${listValue.id}">Update</a>
+							<a> | </a>
+							<a href="user/deleteProduct?id=${listValue.id}">Delete</a>
+						</c:if></td>
 				</tr>
 			</c:forEach>
 		</table>

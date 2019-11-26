@@ -21,7 +21,7 @@
 
 	<h2>Welcome to BeaMercat</h2>
 	<h3>Where you can find the best quality products</h3>
-	
+
 	<br>
 	<br>
 	<br>
@@ -32,7 +32,6 @@
 				<th>Image</th>
 				<th>Name</th>
 				<th>Price</th>
-				<th>Details</th>
 				<th>Category</th>
 				<th>Actions</th>
 			</tr>
@@ -43,13 +42,8 @@
 						src="data:image/jpg;base64,${images[status.index]}" /></td>
 					<td>${listValue.name}</td>
 					<td>${listValue.price}</td>
-					<td>${listValue.details}</td>
 					<td>${listValue.category.name}</td>
-					<td><a href="viewUser?name=${listValue.name}">Details</a> <c:if
-							test="${isAdmin}"> <a> | </a><a
-						href="updateUser?name=${listValue.name}">Update</a><a> | </a><a
-						href="deleteUser?name=${listValue.name}">Delete</a>
-					</c:if></td>
+					<td><a href="viewUser?name=${listValue.name}">Details</a></td>
 				</tr>
 			</c:forEach>
 		</table>

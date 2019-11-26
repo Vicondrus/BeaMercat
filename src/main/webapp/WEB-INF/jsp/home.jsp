@@ -50,7 +50,7 @@ body, html {
 
 			<div class="w3-display-bottom">
 				<a class="w3-large w3-left" href="main">Sign in</a> <a
-					class="w3-large w3-right" href="register">Register</a>
+					class="w3-large w3-right" href="addUser">Register</a>
 			</div>
 
 		</div>

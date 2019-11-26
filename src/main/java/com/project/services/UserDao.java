@@ -41,7 +41,7 @@ public class UserDao implements UserDaoI {
 		if (userRepo.findByUsername(user.getUsername()) != null)
 			return null;
 		if (user.getUserType() == null)
-			user.setUserType(UserType.ADMIN);
+			user.setUserType(UserType.CUSTOMER);
 		if (user.getUserType().equals(UserType.CUSTOMER) && user.getShoppingCart() == null)
 			user.setShoppingCart(new ShoppingCart());
 		user.setUserStatus(Status.ACTIVE);
@@ -66,7 +66,12 @@ public class UserDao implements UserDaoI {
 				user.setPassword(found.getPassword());
 			}
 			user.setId(found.getId());
-			user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+			if (!user.getPassword().equals(found.getPassword()))
+				user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+			if (user.getUserStatus() == null)
+				user.setUserStatus(found.getUserStatus());
+			if (user.getUserType() == null)
+				user.setUserType(found.getUserType());
 			return userRepo.save(user);
 		}
 	}
@@ -103,7 +108,11 @@ public class UserDao implements UserDaoI {
 		Product found = productDao.getByName(product);
 		removeFromCart(user, product);
 		found.setStock(found.getStock() - quant);
-		return user.addProductToCart(found, quant);
+		User u = getByUsername(user);
+		ShoppingCart sc = u.addProductToCart(found, quant);
+		updateUser(u);
+		productDao.updateProduct(found);
+		return sc;
 	}
 
 	@Override
@@ -111,9 +120,15 @@ public class UserDao implements UserDaoI {
 		if (product == null)
 			return null;
 		Product found = productDao.getByName(product);
-		if (user.removeProduct(product))
-			found.setStock(found.getStock() + user.getShoppingCart().getProductQuantity(product));
-		return user.getShoppingCart();
+		User u = getByUsername(user);
+		Integer q = null;
+		if (u.getShoppingCart().getProducts().contains(new ProductQuantity(product)))
+			q = u.getShoppingCart().getProductQuantity(product);
+		if (u.removeProduct(product))
+			found.setStock(found.getStock() + q);
+		updateUser(u);
+		productDao.updateProduct(found);
+		return u.getShoppingCart();
 	}
 
 	@Override
@@ -140,7 +155,21 @@ public class UserDao implements UserDaoI {
 		Product found = productDao.getByName(product);
 		removeFromCart(user, product);
 		found.setStock(found.getStock() - quant);
-		return user.addProductToCart(found, quant);
+		return addToCart(user, product, quant);
+	}
+
+	@Override
+	public ShoppingCart updateQuantityCart(User user, Integer[] quant) {
+		User u = getByUsername(user);
+		for (int i = 0; i < quant.length; i++) {
+			int diff = -u.getShoppingCart().getProducts().get(i).getQuant() + quant[i];
+			Product found = productDao.getByName(u.getShoppingCart().getProducts().get(i).getProduct());
+			found.setStock(found.getStock() - diff);
+			productDao.updateProduct(found);
+			u.getShoppingCart().getProducts().get(i).setQuant(quant[i]);
+		}
+		updateUser(u);
+		return u.getShoppingCart();
 	}
 
 }

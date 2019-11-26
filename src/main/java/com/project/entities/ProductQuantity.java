@@ -30,7 +30,7 @@ public class ProductQuantity {
 		if (product == null) {
 			if (other.product != null)
 				return false;
-		} else if (!product.equals(other.product))
+		} else if (!product.getName().equals(other.getProduct().getName()))
 			return false;
 		return true;
 	}

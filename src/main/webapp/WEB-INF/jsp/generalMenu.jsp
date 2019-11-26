@@ -15,7 +15,5 @@
 
 	</c:when>
 	<c:otherwise>
-		<meta http-equiv="refresh" content="0; url=http://www.ecosia.com/">
-		</head>
 	</c:otherwise>
 </c:choose>

@@ -28,10 +28,15 @@ public class ShoppingCart {
 		if (products.contains(pq))
 			products.remove(pq);
 		products.add(pq);
+		totalPrice += product.getPrice() * quant;
 		return this;
 	}
 
 	public boolean removeProduct(Product product) {
+		if (products.contains(new ProductQuantity(product))) {
+			ProductQuantity pq = products.get(products.indexOf(new ProductQuantity(product)));
+			totalPrice -= pq.getProduct().getPrice() * pq.getQuant();
+		}
 		return products.remove(new ProductQuantity(product));
 	}
 
