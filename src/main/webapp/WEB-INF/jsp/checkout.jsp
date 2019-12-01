@@ -28,37 +28,39 @@
 	<c:if test="${not empty list}">
 		<table style="width: 100%" id="myTable">
 			<tr class="header">
-				<th>Image</th>
 				<th>Name</th>
-				<th>Price</th>
 				<th>Quantity</th>
-				<th>Actions</th>
+				<th>Price</th>
+				<th>Total</th>
 			</tr>
 
 			<c:forEach var="listValue" items="${list}" varStatus="status">
 				<tr>
-					<td><img alt="no image" height="42" width="42"
-						src="data:image/jpg;base64,${images[status.index]}" /></td>
 					<td>${listValue.product.name}</td>
+					<td>${listValue.quant}</td>
 					<td>${listValue.product.price}</td>
-					<td><form action="/user/updateShoppingCart" method="POST">
-							<input style="width: auto; display: inline;" type="number"
-								value="${listValue.quant}" name="quant" required><input
-								type="hidden" value="${listValue.product.name}" name="name">
-							<button style="width: auto; display: inline; float: right;"
-								type="submit" class="cart-btn">Update</button>
-						</form></td>
-					<td><form action="/user/removeFromShoppingCart" method=POST>
-							<input type="hidden" value="${listValue.product.name}"
-								name="name">
-							<button style="float: right;" type="submit" class="red-btn">Remove</button>
-						</form></td>
+					<td>${listValue.quant * listValue.product.price}</td>
 				</tr>
 			</c:forEach>
 		</table>
 		<h2>Total: ${total}</h2>
-		<form action="/user/checkout" method=GET>
-			<button class="registerbtn" type="submit">Checkout</button>
+		<br>
+		<br>
+		<h3>Please complete the form below</h3>
+		<h4>in case the products should be delivered anywhere else than the user's address</h4>
+		<form action="/user/checkoutAux" method=POST>
+			<label for="country"><b>Country</b></label> <input type="text"
+				placeholder="Enter Country" name="country"> <label
+				for="city"><b>City</b></label> <input type="text"
+				placeholder="Enter City" name="city"> <label for="street"><b>Street</b></label>
+			<input type="text" placeholder="Enter Street Name" name="street">
+			<label for="number"><b>Number</b></label> <input type="number"
+				placeholder="Enter Street Number" name="number"> <label
+				for="Apartment"><b>Apartment</b></label> <input type="number"
+				placeholder="Enter Apartment (if case)" name="apartment"> <label
+				for="zipCode"><b>ZipCode</b></label> <input type="text"
+				pattern="[0-9]{6}" placeholder="Enter ZipCode" name="zipCode">
+			<button class="registerbtn" type="submit">Order</button>
 		</form>
 	</c:if>
 

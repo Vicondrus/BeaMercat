@@ -18,13 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.entities.Address;
 import com.project.entities.Category;
+import com.project.entities.Order;
 import com.project.entities.Product;
 import com.project.entities.ProductQuantity;
 import com.project.entities.Provider;
+import com.project.entities.ShoppingCart;
 import com.project.entities.Status;
 import com.project.entities.User;
 import com.project.entities.UserType;
 import com.project.services.interfaces.CategoryDaoI;
+import com.project.services.interfaces.OrderDaoI;
 import com.project.services.interfaces.ProductDaoI;
 import com.project.services.interfaces.ProviderDaoI;
 import com.project.services.interfaces.UserDaoI;
@@ -43,6 +46,9 @@ public class MainController {
 
 	@Autowired
 	private ProviderDaoI providerDao;
+
+	@Autowired
+	private OrderDaoI orderDao;
 
 	@GetMapping("/addCategory")
 	public String getAddNewCategory() {
@@ -134,6 +140,38 @@ public class MainController {
 		return "redirect:/listAllProducts";
 	}
 
+	@GetMapping("/user/checkout")
+	public String getCheckout(ModelMap map, Principal principal) {
+		ShoppingCart sc = userDao.getByUsername(new User(principal.getName())).getShoppingCart();
+		List<ProductQuantity> p = sc.getProducts();
+		map.addAttribute("total", sc.getTotalPrice());
+		map.addAttribute("list", p);
+		return "checkout";
+	}
+
+	@PostMapping("/user/checkoutAux")
+	public String postCheckout(Address address, Principal principal) {
+		userDao.placeOrder(new User(principal.getName()), address);
+		return "redirect:/user/listOrders";
+	}
+
+	@GetMapping("/user/listOrders")
+	public String getUserListOrders(ModelMap map, Principal principal) {
+		map.addAttribute("list", orderDao.getByCustomer(new User(principal.getName())));
+		return "listOrders";
+	}
+
+	@GetMapping("/user/viewOrder")
+	public String getUserViewOrder(String id, ModelMap map) {
+		map.addAttribute("order", orderDao.getById(new Order(id)));
+		return "inspectOrder";
+	}
+
+	@GetMapping("/user/main")
+	public String getUserMain() {
+		return "redirect: /main";
+	}
+
 	@GetMapping("/listAllProducts")
 	public String getListAllProducts(ModelMap map, Principal principal) {
 		List<Product> p;
@@ -176,7 +214,9 @@ public class MainController {
 
 	@GetMapping("/user/viewShoppingCart")
 	public String getUserShoppingCart(ModelMap map, Principal principal) {
-		List<ProductQuantity> p = userDao.getByUsername(new User(principal.getName())).getShoppingCart().getProducts();
+		ShoppingCart sc = userDao.getByUsername(new User(principal.getName())).getShoppingCart();
+		List<ProductQuantity> p = sc.getProducts();
+		map.addAttribute("total", sc.getTotalPrice());
 		map.addAttribute("list", p);
 		map.addAttribute("images", p.stream().map((ProductQuantity x) -> {
 			if (x.getProduct().getImage() == null)
@@ -185,31 +225,29 @@ public class MainController {
 		}).collect(Collectors.toList()));
 		return "inspectShoppingCart";
 	}
-	
+
 	@PostMapping("/user/addToShoppingCart")
 	public String postAddShoppingCart(String productId, Integer quantity, Principal principal) {
 		Product p = new Product();
 		p.setId(productId);
 		p = productDao.getById(p);
 		User u = new User(principal.getName());
-		userDao.addToCart(u,p, quantity);
+		userDao.addToCart(u, p, quantity);
 		return "redirect:/user/viewShoppingCart";
 	}
-	
-	@GetMapping("/user/removeFromShoppingCart")
-	public String getRemoveFromShoppingCart(String id, Principal principal) {
-		Product p = new Product();
-		p.setId(id);
-		p = productDao.getById(p);
+
+	@PostMapping("/user/removeFromShoppingCart")
+	public String getRemoveFromShoppingCart(String name, Principal principal) {
+		Product p = new Product(name);
 		User u = new User(principal.getName());
 		userDao.removeFromCart(u, p);
 		return "redirect:/user/viewShoppingCart";
 	}
-	
+
 	@PostMapping("/user/updateShoppingCart")
-	public String postUpdateShoppingCart(Integer quant[], Principal principal) {
+	public String postUpdateShoppingCart(Integer quant, String name, Principal principal) {
 		User u = new User(principal.getName());
-		userDao.updateQuantityCart(u, quant);
+		userDao.updateQuantityCart(u, new Product(name), quant);
 		return "redirect:/user/viewShoppingCart";
 	}
 

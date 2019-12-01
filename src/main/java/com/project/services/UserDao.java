@@ -133,9 +133,8 @@ public class UserDao implements UserDaoI {
 
 	@Override
 	public void discardCart(User user) {
-		for (ProductQuantity p : user.getShoppingCart().getProducts()) {
-			removeFromCart(user, p.getProduct());
-		}
+		user.setShoppingCart(new ShoppingCart());
+		updateUser(user);
 	}
 
 	@Override
@@ -144,16 +143,16 @@ public class UserDao implements UserDaoI {
 			return null;
 		if (address == null)
 			return null;
-		Order o = orderDao.createOrder(user, address);
-		user.setShoppingCart(new ShoppingCart());
-		userRepo.save(user);
+		user = getByUsername(user);
+		Order o = orderDao.createOrder(getByUsername(user), address);
+		discardCart(user);
 		return o;
 	}
 
 	@Override
 	public ShoppingCart updateQuantityCart(User user, Product product, Integer quant) {
 		Product found = productDao.getByName(product);
-		removeFromCart(user, product);
+		// removeFromCart(user, product);
 		found.setStock(found.getStock() - quant);
 		return addToCart(user, product, quant);
 	}

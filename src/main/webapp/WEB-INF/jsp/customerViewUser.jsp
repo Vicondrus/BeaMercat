@@ -22,15 +22,14 @@
 	<h1>User Details</h1>
 	<ul style="list-style-type: none;">
 		<li>Username: ${user.username}</li>
-		<li>Name: ${user.firstName}</li>
-		<li>Name: ${user.lastName}</li>
+		<li>First Name: ${user.firstName}</li>
+		<li>Last Name: ${user.lastName}</li>
 		<li>Email: ${user.email}</li>
 		<li>Country: ${user.address.country}</li>
 		<li>City: ${user.address.city}</li>
 		<li>Street: ${user.address.street} No. ${user.address.number} <c:if test="${not empty user.address.apartment}">Ap. ${user.address.apartment}</c:if></li>
 		<li>ZipCode: ${user.address.zipCode}</li>
 		<li>Telephone: ${user.telephone}</li>
-		
 	</ul>
 
 

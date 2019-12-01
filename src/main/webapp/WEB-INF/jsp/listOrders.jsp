@@ -33,32 +33,31 @@
 	<c:if test="${not empty list}">
 		<table style="width: 100%" id="myTable">
 			<tr class="header">
-				<th>Image</th>
-				<th>Name</th>
-				<th>Price</th>
-				<th>Details</th>
-				<th>Stock</th>
-				<th>Category</th>
+				<th>Id</th>
+				<c:if test="${isAdmin}">
+					<th>Customer</th>
+				</c:if>
 				<th>Status</th>
+				<th>Created</th>
 				<th>Actions</th>
 			</tr>
 
 			<c:forEach var="listValue" items="${list}" varStatus="status">
 				<tr>
-					<td><img alt="no image" height="42" width="42"
-						src="data:image/jpg;base64,${images[status.index]}" /></td>
-					<td>${listValue.name}</td>
-					<td>${listValue.price}</td>
-					<td>${listValue.details}</td>
-					<td>${listValue.stock}</td>
-					<td>${listValue.category.name}</td>
-					<td>${listValue.productStatus}</td>
-					<td><a href="user/viewProduct?id=${listValue.id}">Details</a> <c:if
-							test="${isAdmin}">
+					<td>${listValue.id}</td>
+					<c:if test="${isAdmin}">
+						<td>${listValue.customerUsername}</td>
+					</c:if>
+					<td>${listValue.status}</td>
+					<td>${listValue.createdDate}</td>
+					<td><c:if test="${isUser}">
+							<a href="/user/viewOrder?id=${listValue.id}">Details</a>
+						</c:if> <c:if test="${isAdmin}">
+							<a href="/admin/viewOrder?id=${listValue.id}">Details</a>
 							<a> | </a>
-							<a href="user/updateProduct?id=${listValue.id}">Update</a>
+							<a href="/admin/updateOrder?id=${listValue.id}">Update</a>
 							<a> | </a>
-							<a href="user/deleteProduct?id=${listValue.id}">Delete</a>
+							<a href="/admin/cancelOrder?id=${listValue.id}">Cancel</a>
 						</c:if></td>
 				</tr>
 			</c:forEach>

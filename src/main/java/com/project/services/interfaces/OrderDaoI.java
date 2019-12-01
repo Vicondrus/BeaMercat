@@ -16,6 +16,8 @@ public interface OrderDaoI {
 
 	Order updateOrder(Order order);
 
-	List<Order> findByCustomer(User customer);
+	List<Order> getByCustomer(User customer);
+
+	Order getById(Order order);
 
 }

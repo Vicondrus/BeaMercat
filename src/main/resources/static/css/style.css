@@ -72,3 +72,33 @@ hr {
 .registerbtn:hover {
 	opacity: 1;
 }
+
+.cart-btn {
+	background-color: #4CAF50;
+	color: white;
+	padding: 16px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+	width: 50%;
+	opacity: 0.9;
+}
+
+.cart-btn:hover {
+	opacity: 1
+}
+
+.red-btn {
+	background-color: #af504c;
+	color: white;
+	padding: 16px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	opacity: 0.9;
+}
+
+.red-btn:hover {
+	opacity: 1
+}

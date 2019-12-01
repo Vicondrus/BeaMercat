@@ -13,6 +13,7 @@ import com.project.entities.User;
 import com.project.repos.OrderRepository;
 import com.project.services.interfaces.OrderDaoI;
 import com.project.services.interfaces.ProductDaoI;
+import com.project.services.interfaces.UserDaoI;
 
 @Service
 public class OrderDao implements OrderDaoI {
@@ -23,13 +24,22 @@ public class OrderDao implements OrderDaoI {
 	@Autowired
 	private ProductDaoI prodDao;
 
+	@Autowired
+	private UserDaoI userDao;
+
 	@Override
 	public Order createOrder(User user, Address address) {
 		if (user == null)
 			return null;
 		if (address == null)
 			return null;
-		Order o = new Order(user, address);
+		Order o;
+		if (address.getCountry() == null || address.getCountry().equals("") || address.getCity() == null
+				|| address.getCity().equals("") || address.getStreet() == null || address.getStreet().equals("")
+				|| address.getNumber() == null || address.getZipCode() == null || address.getZipCode().equals(""))
+			o = new Order(user, user.getAddress());
+		else
+			o = new Order(user, address);
 		o.setStatus(OrderStatus.PROCESSING);
 		return orderRepo.save(o);
 	}
@@ -78,10 +88,15 @@ public class OrderDao implements OrderDaoI {
 	}
 
 	@Override
-	public List<Order> findByCustomer(User customer) {
+	public List<Order> getByCustomer(User customer) {
 		if (customer == null)
 			return null;
 		return orderRepo.findByCustomerUsername(customer.getUsername());
+	}
+
+	@Override
+	public Order getById(Order order) {
+		return orderRepo.findById(order.getId()).orElse(null);
 	}
 
 }

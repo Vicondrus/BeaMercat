@@ -1,5 +1,6 @@
 package com.project.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Id;
@@ -22,6 +23,10 @@ public class Order {
 
 	private OrderStatus status;
 
+	private Date createdDate;
+
+	private Double total;
+
 	public OrderStatus getStatus() {
 		return status;
 	}
@@ -36,13 +41,31 @@ public class Order {
 
 	public Order(User customer, Address address) {
 		this.customer = customer;
-		products.addAll(customer.getShoppingCart().getProducts());
+		products = customer.getShoppingCart().getProducts();
 		this.address = address;
 		this.customerUsername = customer.getUsername();
+		createdDate = new Date();
+		total = customer.getShoppingCart().getTotalPrice();
 	}
 
-	public Order(User customer) {
-		this(customer, customer.getAddress());
+	public Order(String id) {
+		this.id = id;
+	}
+
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	public String getId() {
