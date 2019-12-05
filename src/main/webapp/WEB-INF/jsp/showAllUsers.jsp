@@ -4,6 +4,8 @@
 <html lang="en">
 <meta charset="UTF-8">
 
+<jsp:include page="generalMenu.jsp" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet"
@@ -36,9 +38,9 @@
 					<td>${listValue.username}</td>
 					<td>${listValue.userType}</td>
 					<td>${listValue.userStatus}</td>
-					<td><a href="viewUser?username=${listValue.username}">Details</a><a>
-							| </a><a href="updateUser?username=${listValue.username}">Update</a><a>
-							| </a><a href="deleteUser?username=${listValue.username}">Delete</a></td>
+					<td><a href="/admin/viewUser?username=${listValue.username}">Details</a><a>
+							| </a><a href="/admin/updateUser?username=${listValue.username}">Update</a><a>
+							| </a><a href="/admin/deleteUser?username=${listValue.username}">Delete</a></td>
 				</tr>
 			</c:forEach>
 		</table>

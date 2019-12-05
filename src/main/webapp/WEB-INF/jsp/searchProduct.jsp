@@ -30,16 +30,25 @@
 </head>
 
 <body>
+
+	<form action="/user/searchProductAux" method="POST">
+		<input type="text" placeholder="Search.." name="name" required>
+		<button type="submit" class="registerbtn">Search</button>
+	</form>
+
 	<c:if test="${not empty list}">
 		<table style="width: 100%" id="myTable">
 			<tr class="header">
 				<th>Image</th>
 				<th>Name</th>
-				<th>Price</th>
-				<th>Stock</th>
-				<c:if test="${isAdmin}">
-					<th>Category</th>
+				<c:if test="${isUser}">
+					<th>Price</th>
 				</c:if>
+				<c:if test="${isAdmin}">
+					<th>Stock</th>
+				</c:if>
+				<th>Category</th>
+				<th>Provider</th>
 				<c:if test="${isAdmin}">
 					<th>Status</th>
 				</c:if>
@@ -51,21 +60,25 @@
 					<td><img alt="no image" height="42" width="42"
 						src="data:image/jpg;base64,${images[status.index]}" /></td>
 					<td>${listValue.name}</td>
-					<td>${listValue.price}</td>
-					<td>${listValue.stock}</td>
-					<c:if test="${isAdmin}">
-						<td>${listValue.category.name}</td>
+					<c:if test="${isUser}">
+						<td>${listValue.price}</td>
 					</c:if>
+					<c:if test="${isAdmin}">
+						<td>${listValue.stock}</td>
+					</c:if>
+					<td>${listValue.category.name}</td>
 					<c:if test="${isAdmin}">
 						<td>${listValue.productStatus}</td>
 					</c:if>
-					<td><a href="user/viewProduct?id=${listValue.id}">Details</a>
-						<c:if test="${isAdmin}">
+					<td><c:if test="${isUser}">
+							<a href="user/viewProduct?id=${listValue.id}">Details</a>
+						</c:if> <c:if test="${isAdmin}">
+							<a href="admin/viewProduct?id=${listValue.id}">Details</a>
 							<a> | </a>
 							<a href="admin/updateProduct?id=${listValue.id}">Update</a>
 							<a> | </a>
 							<a href="admin/deleteProduct?id=${listValue.id}">Delete</a>
-						</c:if></td>
+						</c:if>
 				</tr>
 			</c:forEach>
 		</table>

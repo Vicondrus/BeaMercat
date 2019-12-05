@@ -144,6 +144,7 @@ c {
 			<div class="dropdown-content">
 				<a href="/user/browseProducts">Browse</a> <a href="/user/searchProduct">Search</a>
 				<a href="/user/searchByCategory">Search by Category</a>
+				<a href="/user/searchByProvider">Search by Provider</a>
 			</div>
 		</div>
 		<div class="dropdown">
@@ -156,7 +157,7 @@ c {
 		</div>
 		<a href="/user/viewShoppingCart">Shopping Cart</a>
 		<div class="login-container">
-			<form action="/logout">
+			<form action="/logoutAndEmpty">
 				<button type="submit">Sign out</button>
 				<c>${principal.username}</c>
 				<c id="date"></c>

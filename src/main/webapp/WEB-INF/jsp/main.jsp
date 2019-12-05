@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="generalMenu.jsp" />
+
+<sec:authorize access="hasRole('ROLE_USER')" var="isUser" />
+<sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin" />
 
 <html>
 <head>
@@ -43,7 +48,7 @@
 					<td>${listValue.name}</td>
 					<td>${listValue.price}</td>
 					<td>${listValue.category.name}</td>
-					<td><a href="viewUser?name=${listValue.name}">Details</a></td>
+					<td><a href="/user/viewProduct?id=${listValue.id}">Details</a></td>
 				</tr>
 			</c:forEach>
 		</table>

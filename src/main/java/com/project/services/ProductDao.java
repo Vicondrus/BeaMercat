@@ -79,7 +79,10 @@ public class ProductDao implements ProductDaoI {
 		if (found == null) {
 			return null;
 		} else {
-			product.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+			if (file == null || file.isEmpty())
+				product.setImage(found.getImage());
+			else
+				product.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
 			product.setId(found.getId());
 			return prodRepo.save(product);
 		}
@@ -93,7 +96,6 @@ public class ProductDao implements ProductDaoI {
 		if (found == null) {
 			return null;
 		} else {
-
 			product.setId(found.getId());
 			return prodRepo.save(product);
 		}
@@ -115,6 +117,33 @@ public class ProductDao implements ProductDaoI {
 	@Override
 	public List<Product> getAll() {
 		return prodRepo.findAll();
+	}
+
+	@Override
+	public List<Product> getAllActiveByNameLike(Product product) {
+		if (product == null)
+			return null;
+		return prodRepo.findByNameLikeAndProductStatus(product.getName(), Status.ACTIVE);
+	}
+
+	@Override
+	public List<Product> getAllActiveByCatergory(Category category) {
+		if (category == null)
+			return null;
+		Category fCat = catDao.findByName(category);
+		if (fCat == null)
+			return null;
+		return prodRepo.findAllByCategoryAndProductStatus(fCat, Status.ACTIVE);
+	}
+
+	@Override
+	public List<Product> getAllActiveByProvider(Provider provider) {
+		if (provider == null)
+			return null;
+		Provider fProv = provDao.findByName(provider);
+		if (fProv == null)
+			return null;
+		return prodRepo.findAllByProviderAndProductStatus(fProv, Status.ACTIVE);
 	}
 
 	@Override

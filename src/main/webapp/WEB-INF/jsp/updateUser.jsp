@@ -11,19 +11,8 @@
 <sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin" />
 
 
-<c:choose>
-	<c:when test="${isAdmin}">
-		<jsp:include page="adminMenu.jsp" />
-	</c:when>
-	<c:when test="${isUser}">
-		<jsp:include page="customerMenu.jsp" />
+<jsp:include page="generalMenu.jsp" />
 
-	</c:when>
-	<c:otherwise>
-		<meta http-equiv="refresh" content="0; url=http://www.ecosia.com/">
-		</head>
-	</c:otherwise>
-</c:choose>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -43,7 +32,7 @@
 </head>
 <body>
 
-	<form action="/user/updateUserAux" method="POST">
+	<form action="/updateUserAux" method="POST">
 		<div class="container">
 			<h1>Update User</h1>
 			<p>Please review your details</p>
@@ -75,8 +64,8 @@
 
 
 			<c:if test="${isAdmin}">
-				<label for="type"><b>Rights</b></label>
-				<select name="type">
+				<label for="userType"><b>Rights</b></label>
+				<select name="userType">
 					<option value=<%out.print(UserType.ADMIN);%>
 						<%if (((User) request.getAttribute("user")).getUserType().equals(UserType.ADMIN)) {
 					out.print("selected");
@@ -86,14 +75,14 @@
 					out.print("selected");
 				}%>>Customer</option>
 				</select>
-				<label for="type"><b>Status</b></label>
-				<select name="status">
+				<label for="userStatus"><b>Status</b></label>
+				<select name="userStatus">
 					<option value=<%out.print(Status.ACTIVE);%>
 						<%if (((User) request.getAttribute("user")).getUserStatus().equals(Status.ACTIVE)) {
 					out.print("selected");
 				}%>>Active</option>
 					<option value=<%out.print(Status.DELETED);%>
-						<%if (((User) request.getAttribute("user")).getUserStatus().equals(Status.ACTIVE)) {
+						<%if (((User) request.getAttribute("user")).getUserStatus().equals(Status.DELETED)) {
 					out.print("selected");
 				}%>>Deleted</option>
 				</select>

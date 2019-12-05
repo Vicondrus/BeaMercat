@@ -50,24 +50,31 @@ public class MainController {
 	@Autowired
 	private OrderDaoI orderDao;
 
-	@GetMapping("/addCategory")
+	@GetMapping("/logoutAndEmpty")
+	public String getLogout(Principal principal) {
+		User u = userDao.getByUsername(new User(principal.getName()));
+		userDao.discardCartAndRestock(u);
+		return "redirect:/logout";
+	}
+
+	@GetMapping("/admin/addCategory")
 	public String getAddNewCategory() {
 		return "addCategory";
 	}
 
-	@PostMapping("/addCategoryAux")
+	@PostMapping("/admin/addCategoryAux")
 	public String postAddNewCategory(Category category, BindingResult result) {
 		category.setCategoryStatus(Status.ACTIVE);
 		categoryDao.saveCategory(category);
 		return "Saved";
 	}
 
-	@GetMapping("/addProvider")
+	@GetMapping("/admin/addProvider")
 	public String getAddNewProvider() {
 		return "addProvider";
 	}
 
-	@PostMapping("/addProviderAux")
+	@PostMapping("/admin/addProviderAux")
 	public String postAddNewProvider(Provider provider, Address address, BindingResult result) {
 		provider.setProviderStatus(Status.ACTIVE);
 		provider.setAddress(address);
@@ -75,7 +82,7 @@ public class MainController {
 		return "Saved";
 	}
 
-	@GetMapping("/addProduct")
+	@GetMapping("/admin/addProduct")
 	public String getAddNewProduct(ModelMap map) {
 		map.addAttribute("categories",
 				categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
@@ -84,7 +91,7 @@ public class MainController {
 		return "addProduct";
 	}
 
-	@PostMapping("/addProductAux")
+	@PostMapping("/admin/addProductAux")
 	public String postAddNewProduct(Product product, BindingResult result, String category, String provider,
 			@RequestParam("image") MultipartFile image) {
 		if (result.hasFieldErrors())
@@ -100,7 +107,12 @@ public class MainController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		return "Saved";
+		return "redirect:/admin/listProducts";
+	}
+
+	@GetMapping("/admin/addUser")
+	public String getAdminAddNewUser() {
+		return "redirect:/addUser";
 	}
 
 	@GetMapping("/addUser")
@@ -117,7 +129,7 @@ public class MainController {
 		return "home";
 	}
 
-	@GetMapping("/listAllUsers")
+	@GetMapping("/admin/listAllUsers")
 	public String getListAllUsers(ModelMap map) {
 		map.addAttribute("list", userDao.getAll());
 		return "showAllUsers";
@@ -137,6 +149,11 @@ public class MainController {
 
 	@GetMapping("/user/browseProducts")
 	public String getBrowseProducts() {
+		return "redirect:/listAllProducts";
+	}
+
+	@GetMapping("/admin/listProducts")
+	public String getAdminBrowseProducts() {
 		return "redirect:/listAllProducts";
 	}
 
@@ -165,6 +182,65 @@ public class MainController {
 	public String getUserViewOrder(String id, ModelMap map) {
 		map.addAttribute("order", orderDao.getById(new Order(id)));
 		return "inspectOrder";
+	}
+
+	@GetMapping("/user/searchProduct")
+	public String getSearchProduct() {
+		return "searchProduct";
+	}
+
+	@PostMapping("/user/searchProductAux")
+	public String postSearchProduct(String name, ModelMap map) {
+		List<Product> p = productDao.getAllActiveByNameLike(new Product(name));
+		map.addAttribute("list", p);
+		map.addAttribute("images", p.stream().map(x -> {
+			if (x.getImage() == null)
+				return null;
+			return Base64.getEncoder().encodeToString(x.getImage().getData());
+		}).collect(Collectors.toList()));
+		return "searchProduct";
+	}
+
+	@GetMapping("/user/searchByCategory")
+	public String getSearchByCategory(ModelMap map) {
+		map.addAttribute("cats",
+				categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
+		return "searchByCategory";
+	}
+
+	@PostMapping("/user/searchByCategoryAux")
+	public String postSearchByCategory(ModelMap map, String cat) {
+		map.addAttribute("cats",
+				categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
+		List<Product> p = productDao.getAllActiveByCatergory(new Category(cat));
+		map.addAttribute("list", p);
+		map.addAttribute("images", p.stream().map(x -> {
+			if (x.getImage() == null)
+				return null;
+			return Base64.getEncoder().encodeToString(x.getImage().getData());
+		}).collect(Collectors.toList()));
+		return "searchByCategory";
+	}
+
+	@GetMapping("/user/searchByProvider")
+	public String getSearchByProvider(ModelMap map) {
+		map.addAttribute("provs",
+				providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
+		return "searchByProvider";
+	}
+
+	@PostMapping("/user/searchByProviderAux")
+	public String postSearchByProvider(ModelMap map, String prov) {
+		map.addAttribute("provs",
+				providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
+		List<Product> p = productDao.getAllActiveByProvider(new Provider(prov));
+		map.addAttribute("list", p);
+		map.addAttribute("images", p.stream().map(x -> {
+			if (x.getImage() == null)
+				return null;
+			return Base64.getEncoder().encodeToString(x.getImage().getData());
+		}).collect(Collectors.toList()));
+		return "searchByProvider";
 	}
 
 	@GetMapping("/user/main")
@@ -273,5 +349,70 @@ public class MainController {
 	@GetMapping("/home")
 	public String getHome() {
 		return "home";
+	}
+
+	@GetMapping("/admin/viewUser")
+	public String adminViewUser(String username, ModelMap map) {
+		map.addAttribute("user", userDao.getByUsername(new User(username)));
+		return "customerViewUser";
+	}
+
+	@GetMapping("/admin/updateUser")
+	public String getAdminUpdateUser(ModelMap map, String username) {
+		map.addAttribute("user", userDao.getByUsername(new User(username)));
+		return "updateUser";
+	}
+
+	@GetMapping("/admin/deleteUser")
+	public String getDeleteUser(ModelMap map, String username) {
+		map.addAttribute("user", userDao.getByUsername(new User(username)));
+		return "deleteUser";
+	}
+
+	@PostMapping("deleteUserAux")
+	public String postDeleteUser(User user) {
+		userDao.deleteUser(user);
+		return "redirect:/admin/listAllUsers";
+	}
+
+	@GetMapping("/admin/viewProduct")
+	public String getViewProductAdmin(ModelMap map, String id) {
+		Product aux = new Product();
+		aux.setId(id);
+		Product p = productDao.getById(aux);
+		if (p == null)
+			map.addAttribute("error", "No such product");
+		map.addAttribute("product", p);
+		map.addAttribute("image", Base64.getEncoder().encodeToString(p.getImage().getData()));
+		return "showProduct";
+	}
+
+	@GetMapping("/admin/updateProduct")
+	public String getUpdateProduct(ModelMap map, String id) {
+		Product aux = new Product();
+		aux.setId(id);
+		Product p = productDao.getById(aux);
+		if (p == null)
+			map.addAttribute("error", "No such product");
+		map.addAttribute("product", p);
+		map.addAttribute("categories",
+				categoryDao.getAllActive().stream().map(Category::getName).collect(Collectors.toList()));
+		map.addAttribute("providers",
+				providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
+		map.addAttribute("image", Base64.getEncoder().encodeToString(p.getImage().getData()));
+		return "updateProduct";
+	}
+
+	@PostMapping("/admin/updateProductAux")
+	public String postUpdateProduct(ModelMap map, Product product, String category, String provider,
+			@RequestParam("img") MultipartFile image) {
+		product.setProvider(providerDao.findByName(new Provider(provider.trim())));
+		product.setCategory(categoryDao.findByName(new Category(null, category.trim())));
+		try {
+			productDao.updateProductImage(product, image);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "redirect:/admin/listProducts";
 	}
 }

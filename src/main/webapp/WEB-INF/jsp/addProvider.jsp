@@ -10,7 +10,7 @@
 </head>
 <body>
 
-	<form action="/addProviderAux" method="POST">
+	<form action="/admin/addProviderAux" method="POST">
 		<div class="container">
 			<h1>Create Provider</h1>
 			<p>Please complete the form below</p>

@@ -138,6 +138,13 @@ public class UserDao implements UserDaoI {
 	}
 
 	@Override
+	public void discardCartAndRestock(User user) {
+		for (ProductQuantity p : user.getShoppingCart().getProducts()) {
+			removeFromCart(user, p.getProduct());
+		}
+	}
+
+	@Override
 	public Order placeOrder(User user, Address address) {
 		if (user == null)
 			return null;

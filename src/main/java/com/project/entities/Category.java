@@ -6,18 +6,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Category {
-	
+
 	@Id
 	private String id;
-	
+
 	private String name;
-	
+
 	private Status categoryStatus;
 
 	public Category() {
 		super();
 	}
-	
+
 	public Category(String id, String name) {
 		super();
 		this.id = id;
@@ -30,6 +30,10 @@ public class Category {
 		this.id = id;
 		this.name = name;
 		this.categoryStatus = categoryStatus;
+	}
+
+	public Category(String name) {
+		this.name = name;
 	}
 
 	@Override

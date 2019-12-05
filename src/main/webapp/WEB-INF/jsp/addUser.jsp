@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+
+<%@page import="com.project.entities.User"%>
+<%@page import="com.project.entities.UserType"%>
+<%@page import="com.project.entities.Status"%>
+
+<sec:authorize access="hasRole('ROLE_USER')" var="isUser" />
+<sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin" />
 
 <jsp:include page="generalMenu.jsp" />
-
 <html>
 <head>
 <c:url value="/css/style.css" var="jstlCss" />
@@ -42,6 +50,13 @@
 				type="text" pattern="+[0-9]{11}"
 				placeholder="Enter Telephone Number (e.g. +40123456789)"
 				name="telephone" required>
+			<c:if test="${isAdmin}">
+				<label for="userType"><b>Rights</b></label>
+				<select name="userType">
+					<option value=<%out.print(UserType.ADMIN);%>>Administrator</option>
+					<option value=<%out.print(UserType.CUSTOMER);%>>Customer</option>
+				</select>
+			</c:if>
 			<hr>
 
 			<button type="submit" class="registerbtn">Create</button>

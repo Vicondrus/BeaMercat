@@ -33,4 +33,10 @@ public interface ProductDaoI {
 
 	List<Product> getAllActive();
 
+	List<Product> getAllActiveByNameLike(Product product);
+
+	List<Product> getAllActiveByCatergory(Category category);
+
+	List<Product> getAllActiveByProvider(Provider provider);
+
 }

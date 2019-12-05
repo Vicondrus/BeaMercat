@@ -127,14 +127,14 @@ c {
 
 	<div class="navbar">
 		<b><img src="/forest.png" alt="HTML5 Icon"
-			style="width: 32px; height: 32px;"></b> <a href="overview">Home</a>
+			style="width: 32px; height: 32px;"></b> <a href="/home">Home</a>
 		<div class="dropdown">
 			<button class="dropbtn">
 				User <i class="fa fa-caret-down"></i>
 			</button>
 			<div class="dropdown-content">
-				<a href="/admin/createUser">Create</a>
-				<a href="/admin/listUsers">View</a>
+				<a href="/admin/addUser">Create</a>
+				<a href="/admin/listAllUsers">View</a>
 			</div>
 		</div>
 		<div class="dropdown">
@@ -142,7 +142,7 @@ c {
 				Products <i class="fa fa-caret-down"></i>
 			</button>
 			<div class="dropdown-content">
-				<a href="/admin/createProduct">Create</a>
+				<a href="/admin/addProduct">Create</a>
 				<a href="/admin/listProducts">View</a>
 			</div>
 		</div>
@@ -159,7 +159,7 @@ c {
 				Category <i class="fa fa-caret-down"></i>
 			</button>
 			<div class="dropdown-content">
-				<a href="/admin/createCategory">Create</a>
+				<a href="/admin/addCategory">Create</a>
 				<a href="/admin/listCategories">View</a>
 			</div>
 		</div>
@@ -168,7 +168,7 @@ c {
 				Provider <i class="fa fa-caret-down"></i>
 			</button>
 			<div class="dropdown-content">
-				<a href="/admin/createProvider">Create</a>
+				<a href="/admin/addProvider">Create</a>
 				<a href="/admin/listProviders">View</a>
 			</div>
 		</div>

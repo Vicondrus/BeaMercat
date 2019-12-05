@@ -34,4 +34,6 @@ public interface UserDaoI {
 
 	ShoppingCart updateQuantityCart(User u, Integer[] quant);
 
+	void discardCartAndRestock(User user);
+
 }

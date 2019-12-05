@@ -10,7 +10,7 @@
 </head>
 <body>
 
-	<form action="/addCategoryAux" method="POST">
+	<form action="/admin/addCategoryAux" method="POST">
 		<div class="container">
 			<h1>Create Category</h1>
 			<p>Please complete the form below</p>
