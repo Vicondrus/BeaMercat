@@ -7,6 +7,7 @@ import com.project.entities.Order;
 import com.project.entities.Product;
 import com.project.entities.ShoppingCart;
 import com.project.entities.User;
+import com.project.exceptions.InvalidArgumentsException;
 
 public interface UserDaoI {
 
@@ -22,11 +23,11 @@ public interface UserDaoI {
 
 	User getByUsername(User user);
 	
-	ShoppingCart addToCart(User user, Product product, Integer quant);
+	ShoppingCart addToCart(User user, Product product, Integer quant) throws InvalidArgumentsException;
 	
 	ShoppingCart removeFromCart(User user, Product product);
 	
-	ShoppingCart updateQuantityCart(User user, Product product, Integer quant);
+	ShoppingCart updateQuantityCart(User user, Product product, Integer quant) throws InvalidArgumentsException;
 
 	void discardCart(User user);
 

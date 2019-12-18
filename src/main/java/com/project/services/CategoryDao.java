@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.Category;
+import com.project.entities.Product;
 import com.project.entities.Status;
 import com.project.repos.CategoryRepository;
 import com.project.services.interfaces.CategoryDaoI;
@@ -17,6 +18,9 @@ public class CategoryDao implements CategoryDaoI {
 
 	@Autowired
 	private CategoryRepository catRepo;
+
+	@Autowired
+	private ProductDao prodDao;
 
 	@Transactional
 	@Override
@@ -60,7 +64,12 @@ public class CategoryDao implements CategoryDaoI {
 		Category found = findByName(category);
 		if (found == null)
 			return null;
+		List<Product> prods = prodDao.getAllByCategory(found);
 		category.setId(found.getId());
+		prods.stream().forEach(x -> {
+			x.setCategory(category);
+			prodDao.updateProduct(x);
+		});
 		return catRepo.save(category);
 	}
 
@@ -73,7 +82,7 @@ public class CategoryDao implements CategoryDaoI {
 		if (found == null)
 			return null;
 		found.setCategoryStatus(Status.DELETED);
-		return catRepo.save(category);
+		return catRepo.save(found);
 	}
 
 }

@@ -67,6 +67,7 @@
 						<td>${listValue.stock}</td>
 					</c:if>
 					<td>${listValue.category.name}</td>
+					<td>${listValue.provider.name}</td>
 					<c:if test="${isAdmin}">
 						<td>${listValue.productStatus}</td>
 					</c:if>

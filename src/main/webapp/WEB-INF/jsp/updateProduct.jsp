@@ -24,7 +24,7 @@
 			<hr>
 
 			<label for="name"><b>Name</b></label> <input type="text"
-				value="${product.name}" name="name" required> <label
+				value="${product.name}" name="name" readonly> <label
 				for="price"><b>Price</b></label> <input type="number" step="0.01"
 				value="${product.price}" name="price" required> <label
 				for="details"><b>Details</b></label> <input type="text"

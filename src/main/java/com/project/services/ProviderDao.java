@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.entities.Product;
 import com.project.entities.Provider;
 import com.project.entities.Status;
 import com.project.repos.ProviderRepository;
@@ -17,6 +18,9 @@ public class ProviderDao implements ProviderDaoI {
 
 	@Autowired
 	private ProviderRepository provRepo;
+
+	@Autowired
+	private ProductDao prodDao;
 
 	@Transactional
 	@Override
@@ -60,7 +64,12 @@ public class ProviderDao implements ProviderDaoI {
 		Provider found = findByName(provider);
 		if (found == null)
 			return null;
+		List<Product> prods = prodDao.getAllByProvider(found);
 		provider.setId(found.getId());
+		prods.stream().forEach(x -> {
+			x.setProvider(provider);
+			prodDao.updateProduct(x);
+		});
 		return provRepo.save(provider);
 	}
 
@@ -73,7 +82,7 @@ public class ProviderDao implements ProviderDaoI {
 		if (found == null)
 			return null;
 		found.setProviderStatus(Status.DELETED);
-		return provRepo.save(provider);
+		return provRepo.save(found);
 	}
 
 }

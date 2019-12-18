@@ -2,6 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
+<%@page import="com.project.entities.OrderStatus"%>
+<%@page import="com.project.entities.Order"%>
 
 <sec:authorize access="hasRole('ROLE_USER')" var="isUser" />
 <sec:authorize access="hasRole('ROLE_ADMIN')" var="isAdmin" />
@@ -30,6 +33,14 @@
 </head>
 
 <body>
+
+	<c:if test="${isAdmin}">
+		<form action="/listOrdersAux" method="POST">
+			<input type="text" placeholder="Search user.." name="username" required>
+			<button type="submit" class="registerbtn">Search</button>
+		</form>
+	</c:if>
+
 	<c:if test="${not empty list}">
 		<table style="width: 100%" id="myTable">
 			<tr class="header">
@@ -52,12 +63,16 @@
 					<td>${listValue.createdDate}</td>
 					<td><c:if test="${isUser}">
 							<a href="/user/viewOrder?id=${listValue.id}">Details</a>
+							<c:if test='<%= ((Order)pageContext.getAttribute("listValue")).getStatus() == OrderStatus.PROCESSING %>'>
+							<a> | </a>
+							<a href="/user/cancelOrder?id=${listValue.id}">Request Cancellation</a>
+							</c:if>
 						</c:if> <c:if test="${isAdmin}">
 							<a href="/admin/viewOrder?id=${listValue.id}">Details</a>
-							<a> | </a>
-							<a href="/admin/updateOrder?id=${listValue.id}">Update</a>
+							<c:if test='<%= ((Order)pageContext.getAttribute("listValue")).getStatus() == OrderStatus.CANCEL_REQUESTED %>'>
 							<a> | </a>
 							<a href="/admin/cancelOrder?id=${listValue.id}">Cancel</a>
+							</c:if>
 						</c:if></td>
 				</tr>
 			</c:forEach>

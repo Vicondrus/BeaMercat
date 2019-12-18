@@ -20,4 +20,6 @@ public interface OrderDaoI {
 
 	Order getById(Order order);
 
+	List<Order> getAll();
+
 }

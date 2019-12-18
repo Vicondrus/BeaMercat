@@ -103,3 +103,28 @@ input[type=number]:focus {
 	color: #86939E;
 	line-height: 24px;
 }
+
+.alert {
+	padding: 20px;
+	background-color: #f44336;
+	color: white;
+}
+
+.alert.warning {
+	background-color: #ff9800;
+}
+
+.closebtn {
+	margin-left: 15px;
+	color: white;
+	font-weight: bold;
+	float: right;
+	font-size: 22px;
+	line-height: 20px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.closebtn:hover {
+	color: black;
+}

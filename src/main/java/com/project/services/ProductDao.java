@@ -1,7 +1,9 @@
 package com.project.services;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -123,7 +125,9 @@ public class ProductDao implements ProductDaoI {
 	public List<Product> getAllActiveByNameLike(Product product) {
 		if (product == null)
 			return null;
-		return prodRepo.findByNameLikeAndProductStatus(product.getName(), Status.ACTIVE);
+		String name = Arrays.stream(product.getName().split("\\s+"))
+				.map(t -> t.substring(0, 1).toUpperCase() + t.substring(1)).collect(Collectors.joining(" "));
+		return prodRepo.findByNameLikeAndProductStatus(name, Status.ACTIVE);
 	}
 
 	@Override

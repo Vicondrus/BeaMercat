@@ -16,6 +16,7 @@ import com.project.entities.ShoppingCart;
 import com.project.entities.Status;
 import com.project.entities.User;
 import com.project.entities.UserType;
+import com.project.exceptions.InvalidArgumentsException;
 import com.project.repos.UserRepository;
 import com.project.services.interfaces.OrderDaoI;
 import com.project.services.interfaces.ProductDaoI;
@@ -104,8 +105,10 @@ public class UserDao implements UserDaoI {
 	}
 
 	@Override
-	public ShoppingCart addToCart(User user, Product product, Integer quant) {
+	public ShoppingCart addToCart(User user, Product product, Integer quant) throws InvalidArgumentsException {
 		Product found = productDao.getByName(product);
+		if (quant < 1)
+			throw new InvalidArgumentsException("The quantity should be a number greater than zero");
 		removeFromCart(user, product);
 		found.setStock(found.getStock() - quant);
 		User u = getByUsername(user);
@@ -157,7 +160,7 @@ public class UserDao implements UserDaoI {
 	}
 
 	@Override
-	public ShoppingCart updateQuantityCart(User user, Product product, Integer quant) {
+	public ShoppingCart updateQuantityCart(User user, Product product, Integer quant) throws InvalidArgumentsException {
 		Product found = productDao.getByName(product);
 		// removeFromCart(user, product);
 		found.setStock(found.getStock() - quant);

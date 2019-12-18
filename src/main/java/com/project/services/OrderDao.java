@@ -64,15 +64,29 @@ public class OrderDao implements OrderDaoI {
 		Order found = orderRepo.findById(order.getId()).orElse(null);
 		if (found == null)
 			return null;
-		if (!found.getStatus().equals(OrderStatus.PROCESSING))
-			return null;
+		if (!found.getStatus().equals(OrderStatus.CANCEL_REQUESTED))
+			if (found.getStatus().equals(OrderStatus.PROCESSING))
+				return requestCancellation(order);
 		found.setStatus(OrderStatus.CANCELLED);
 		// !!!!!!!!!!!!!!!!!!!!!!!!
 		found.getProducts().stream().forEach(x -> {
 			Product prod = prodDao.getByName(x.getProduct());
 			prod.setStock(prod.getStock() + x.getQuant());
+			prodDao.updateProduct(prod);
 		});
 		// !!!!!!!!!!!!!!!!!!!!!!!!
+		return orderRepo.save(found);
+	}
+
+	private Order requestCancellation(Order order) {
+		if (order == null)
+			return null;
+		Order found = orderRepo.findById(order.getId()).orElse(null);
+		if (found == null)
+			return null;
+		if (!found.getStatus().equals(OrderStatus.PROCESSING))
+			return null;
+		found.setStatus(OrderStatus.CANCEL_REQUESTED);
 		return orderRepo.save(found);
 	}
 
@@ -85,6 +99,11 @@ public class OrderDao implements OrderDaoI {
 			return null;
 		order.setId(found.getId());
 		return orderRepo.save(order);
+	}
+
+	@Override
+	public List<Order> getAll() {
+		return orderRepo.findAll();
 	}
 
 	@Override
