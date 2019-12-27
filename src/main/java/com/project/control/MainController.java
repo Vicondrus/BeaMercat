@@ -22,6 +22,7 @@ import com.project.entities.Order;
 import com.project.entities.Product;
 import com.project.entities.ProductQuantity;
 import com.project.entities.Provider;
+import com.project.entities.Review;
 import com.project.entities.ShoppingCart;
 import com.project.entities.Status;
 import com.project.entities.User;
@@ -31,6 +32,7 @@ import com.project.services.interfaces.CategoryDaoI;
 import com.project.services.interfaces.OrderDaoI;
 import com.project.services.interfaces.ProductDaoI;
 import com.project.services.interfaces.ProviderDaoI;
+import com.project.services.interfaces.ReviewDaoI;
 import com.project.services.interfaces.UserDaoI;
 
 @Controller
@@ -50,6 +52,9 @@ public class MainController {
 
 	@Autowired
 	private OrderDaoI orderDao;
+
+	@Autowired
+	private ReviewDaoI reviewDao;
 
 	@GetMapping("/logoutAndEmpty")
 	public String getLogout(Principal principal) {
@@ -137,7 +142,7 @@ public class MainController {
 	}
 
 	@GetMapping("/user/viewProduct")
-	public String getViewProduct(ModelMap map, String id) {
+	public String getViewProduct(ModelMap map, String id, Principal principal) {
 		Product aux = new Product();
 		aux.setId(id);
 		Product p = productDao.getById(aux);
@@ -145,7 +150,30 @@ public class MainController {
 			map.addAttribute("error", "No such product");
 		map.addAttribute("product", p);
 		map.addAttribute("image", Base64.getEncoder().encodeToString(p.getImage().getData()));
+		List<Review> reviews = reviewDao.getAllActiveForProduct(aux);
+		map.addAttribute("reviews", reviews);
+		map.addAttribute("custReview",
+				reviewDao.findCustomerReview(new User(principal.getName()), reviews));
 		return "showProduct";
+	}
+	
+	@PostMapping("/user/addReview")
+	public String postAddReview(Review review) {
+		reviewDao.saveReview(review);
+		
+		return "redirect:/user/viewProduct?id="+review.getProductId();
+	}
+	
+	@PostMapping("/user/modifyReview")
+	public String postModifyReview(Review review) {
+		reviewDao.updateReview(review);
+		return "redirect:/user/viewProduct?id="+review.getProductId();
+	}
+	
+	@PostMapping("/user/deleteReview")
+	public String postDeleteReview(Review review) {
+		reviewDao.deleteReview(review);
+		return "redirect:/user/viewProduct?id="+review.getProductId();
 	}
 
 	@GetMapping("/user/browseProducts")

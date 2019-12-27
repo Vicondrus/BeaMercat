@@ -6,6 +6,27 @@ html, body {
 	font-family: 'Roboto', sans-serif;
 }
 
+#myTable {
+	border-collapse: collapse;
+	width: 100%;
+	border: 1px solid #ddd;
+	font-size: 15px;
+}
+
+#myTable th, #myTable td {
+	text-align: left;
+	padding: 9px;
+}
+
+#myTable tr {
+	border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+	background-color: #333;
+	color: white;
+}
+
 .container {
 	max-width: 1200px;
 	margin: 0 auto;
@@ -35,6 +56,21 @@ html, body {
 	transition: all 0.3s ease;
 }
 
+.red-btn {
+	background-color: #af504c;
+	color: white;
+	padding: 16px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	opacity: 0.9;
+}
+
+.red-btn:hover {
+	opacity: 1
+}
+
 .cart-btn {
 	background-color: #4CAF50;
 	color: white;
@@ -50,7 +86,7 @@ html, body {
 	opacity: 1
 }
 
-input[type=number] {
+input[type=number], input[type=text] {
 	width: 100%;
 	padding: 15px;
 	margin: 5px 0 22px 0;
@@ -59,7 +95,7 @@ input[type=number] {
 	background: #f1f1f1;
 }
 
-input[type=number]:focus {
+input[type=number]:focus, input[type=text]:focus {
 	background-color: #ddd;
 	outline: none;
 }
@@ -113,6 +149,22 @@ input[type=number]:focus {
 .alert.warning {
 	background-color: #ff9800;
 }
+
+.registerbtn {
+	background-color: #4CAF50;
+	color: white;
+	padding: 16px 20px;
+	margin: 8px 0;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	opacity: 0.9;
+}
+
+.registerbtn:hover {
+	opacity: 1;
+}
+
 
 .closebtn {
 	margin-left: 15px;
