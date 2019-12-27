@@ -3,8 +3,7 @@ package com.project.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Id;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -26,6 +25,8 @@ public class Order {
 	private Date createdDate;
 
 	private Double total;
+
+	private String courierName;
 
 	public OrderStatus getStatus() {
 		return status;
@@ -106,6 +107,14 @@ public class Order {
 
 	public void setCustomerUsername(String customerUsername) {
 		this.customerUsername = customerUsername;
+	}
+
+	public String getCourierName() {
+		return courierName;
+	}
+
+	public void setCourierName(String courierName) {
+		this.courierName = courierName;
 	}
 
 }

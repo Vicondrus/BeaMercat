@@ -1,5 +1,7 @@
 package com.project.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -29,7 +31,17 @@ public class User {
 
 	private String telephone;
 
+	private List<Order> courierOrders;
+
 	public User() {
+	}
+
+	public List<Order> getCourierOrders() {
+		return courierOrders;
+	}
+
+	public void setCourierOrders(List<Order> courierOrders) {
+		this.courierOrders = courierOrders;
 	}
 
 	public User(String id, String username, String firstName, String lastName, String password, String email,

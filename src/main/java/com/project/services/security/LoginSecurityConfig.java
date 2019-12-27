@@ -28,10 +28,12 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/addUser", "/addUserAux", "/home").permitAll().antMatchers("/user/**", "/main")
-				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')").antMatchers("/admin/**")
-				.access("hasRole('ROLE_ADMIN')").and().formLogin().permitAll().defaultSuccessUrl("/main").and().logout()
-				.logoutSuccessUrl("/").and().csrf().disable();
+		http.authorizeRequests().antMatchers("/addUser", "/addUserAux", "/home").permitAll().antMatchers("/main")
+				.access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_COURIER')")
+				.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+				.antMatchers("/courier/**").access("hasRole('ROLE_COURIER') or hasRole('ROLE_ADMIN')")
+				.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and().formLogin().permitAll()
+				.defaultSuccessUrl("/main").and().logout().logoutSuccessUrl("/").and().csrf().disable();
 		http.authorizeRequests().antMatchers("/resources/**").permitAll();
 	}
 

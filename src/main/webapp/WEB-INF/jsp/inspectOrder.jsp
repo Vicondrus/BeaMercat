@@ -31,6 +31,7 @@
 				test="${not empty order.address.apartment}">Ap. ${order.address.apartment}</c:if></li>
 		<li>ZipCode: ${order.address.zipCode}</li>
 		<li>Status: ${order.status}</li>
+		<li>Courier: ${order.courierName}</li>
 		<li>Created: ${order.createdDate}</li>
 	</ul>
 	<br>

@@ -7,7 +7,9 @@ import com.project.entities.Order;
 import com.project.entities.Product;
 import com.project.entities.ShoppingCart;
 import com.project.entities.User;
+import com.project.entities.UserType;
 import com.project.exceptions.InvalidArgumentsException;
+import com.project.services.distributionstrategies.DistributionStrategy;
 
 public interface UserDaoI {
 
@@ -36,5 +38,9 @@ public interface UserDaoI {
 	ShoppingCart updateQuantityCart(User u, Integer[] quant);
 
 	void discardCartAndRestock(User user);
+
+	List<User> getByRole(UserType role);
+
+	User addCourierOrder(DistributionStrategy strategy, Order order);
 
 }

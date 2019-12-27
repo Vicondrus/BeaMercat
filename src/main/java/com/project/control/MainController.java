@@ -173,6 +173,18 @@ public class MainController {
 		return "redirect:/user/listOrders";
 	}
 
+	@GetMapping("/courier/completeOrder")
+	public String getCompleteOrder(String id, ModelMap map) {
+		map.addAttribute("order", orderDao.getById(new Order(id)));
+		return "completeOrder";
+	}
+
+	@PostMapping("/completeOrderAux")
+	public String postCompleteOrder(String id) {
+		orderDao.completeOrder(new Order(id));
+		return "redirect:/courier/viewOrders";
+	}
+
 	@GetMapping("/user/listOrders")
 	public String getUserListOrders(ModelMap map, Principal principal) {
 		map.addAttribute("list", orderDao.getByCustomer(new User(principal.getName())));
@@ -310,22 +322,29 @@ public class MainController {
 		return "customerViewUser";
 	}
 
+	@GetMapping("/courier/viewUser")
+	public String getCourierViewUser(ModelMap map, Principal principal) {
+		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
+		return "customerViewUser";
+	}
+
 	@GetMapping("/user/updateUser")
 	public String getUserUpdateUser(ModelMap map, Principal principal) {
 		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
 		return "updateUser";
 	}
 
-	@PostMapping("/user/updateUserAux")
-	public String postUserUpdateUser(User user, Address address) {
-		return postUpdateUserCommon(user, address);
+	@GetMapping("/courier/updateUser")
+	public String getCourierUpdateUser(ModelMap map, Principal principal) {
+		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
+		return "updateUser";
 	}
 
 	@PostMapping("/updateUserAux")
 	public String postUpdateUserCommon(User user, Address address) {
 		user.setAddress(address);
 		userDao.updateUser(user);
-		return "redirect:/user/viewUser";
+		return "redirect:/main";
 	}
 
 	@GetMapping("/user/viewShoppingCart")
@@ -381,7 +400,9 @@ public class MainController {
 	}
 
 	@GetMapping("/main")
-	public String getAllUsers(ModelMap map) {
+	public String getAllUsers(ModelMap map, Principal principal) {
+		if (userDao.getByUsername(new User(principal.getName())).getUserType().equals(UserType.COURIER))
+			return "redirect:/courier/viewOrders";
 		List<Product> l = productDao.getAllActive();
 		Collections.shuffle(l);
 		l = l.stream().limit(5).collect(Collectors.toList());
@@ -392,6 +413,12 @@ public class MainController {
 		}).collect(Collectors.toList()));
 		map.addAttribute("list", l);
 		return "main";
+	}
+
+	@GetMapping("/courier/viewOrders")
+	public String getCourierViewOrders(ModelMap map, Principal principal) {
+		map.addAttribute("list", userDao.getByUsername(new User(principal.getName())).getCourierOrders());
+		return "listOrders";
 	}
 
 	@GetMapping("/home")

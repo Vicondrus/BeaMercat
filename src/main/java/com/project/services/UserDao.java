@@ -1,12 +1,12 @@
 package com.project.services;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.entities.Address;
 import com.project.entities.Order;
@@ -18,6 +18,7 @@ import com.project.entities.User;
 import com.project.entities.UserType;
 import com.project.exceptions.InvalidArgumentsException;
 import com.project.repos.UserRepository;
+import com.project.services.distributionstrategies.DistributionStrategy;
 import com.project.services.interfaces.OrderDaoI;
 import com.project.services.interfaces.ProductDaoI;
 import com.project.services.interfaces.UserDaoI;
@@ -33,6 +34,11 @@ public class UserDao implements UserDaoI {
 	@Autowired
 	private OrderDaoI orderDao;
 
+	@Override
+	public List<User> getByRole(UserType role) {
+		return userRepo.findByUserType(role);
+	}
+
 	@Transactional
 	@Override
 	public User saveUser(User user) {
@@ -46,6 +52,9 @@ public class UserDao implements UserDaoI {
 		if (user.getUserType().equals(UserType.CUSTOMER) && user.getShoppingCart() == null)
 			user.setShoppingCart(new ShoppingCart());
 		user.setUserStatus(Status.ACTIVE);
+		if (user.getUserType().equals(UserType.COURIER) && user.getCourierOrders() == null) {
+			user.setCourierOrders(new ArrayList<Order>());
+		}
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword().trim()));
 		return userRepo.save(user);
 	}
@@ -67,6 +76,25 @@ public class UserDao implements UserDaoI {
 				user.setPassword(found.getPassword());
 			}
 			user.setId(found.getId());
+			if (user.getUserType() == null) {
+				user.setUserType(found.getUserType());
+				user.setShoppingCart(found.getShoppingCart());
+				user.setCourierOrders(found.getCourierOrders());
+			}
+			if (user.getUserType().equals(UserType.CUSTOMER)) {
+				if (user.getShoppingCart() == null)
+					user.setShoppingCart(new ShoppingCart());
+				user.setCourierOrders(null);
+			}
+			if (user.getUserType().equals(UserType.ADMIN)) {
+				user.setShoppingCart(null);
+				user.setCourierOrders(null);
+			}
+			if (user.getUserType().equals(UserType.COURIER)) {
+				user.setShoppingCart(null);
+				if (user.getCourierOrders() == null)
+					user.setCourierOrders(new ArrayList<Order>());
+			}
 			if (!user.getPassword().equals(found.getPassword()))
 				user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 			if (user.getUserStatus() == null)
@@ -179,6 +207,15 @@ public class UserDao implements UserDaoI {
 		}
 		updateUser(u);
 		return u.getShoppingCart();
+	}
+
+	@Override
+	public User addCourierOrder(DistributionStrategy strategy, Order order) {
+		List<User> couriers = getByRole(UserType.COURIER);
+		User selected = strategy.selectCourier(order, couriers);
+		selected.getCourierOrders().add(order);
+		order.setCourierName(selected.getUsername());
+		return updateUser(selected);
 	}
 
 }

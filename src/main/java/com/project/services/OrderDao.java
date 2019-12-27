@@ -10,7 +10,10 @@ import com.project.entities.Order;
 import com.project.entities.OrderStatus;
 import com.project.entities.Product;
 import com.project.entities.User;
+import com.project.entities.UserType;
 import com.project.repos.OrderRepository;
+import com.project.services.distributionstrategies.DistributionStrategy;
+import com.project.services.distributionstrategies.LeastOrdersStrategy;
 import com.project.services.interfaces.OrderDaoI;
 import com.project.services.interfaces.ProductDaoI;
 import com.project.services.interfaces.UserDaoI;
@@ -41,7 +44,11 @@ public class OrderDao implements OrderDaoI {
 		else
 			o = new Order(user, address);
 		o.setStatus(OrderStatus.PROCESSING);
-		return orderRepo.save(o);
+		DistributionStrategy strategy = new LeastOrdersStrategy();
+		o.setCourierName(strategy.selectCourier(o, userDao.getByRole(UserType.COURIER)).getUsername());
+		o = orderRepo.save(o);
+		userDao.addCourierOrder(strategy, o);
+		return o;
 	}
 
 	@Override
@@ -54,6 +61,12 @@ public class OrderDao implements OrderDaoI {
 		if (!found.getStatus().equals(OrderStatus.PROCESSING))
 			return null;
 		found.setStatus(OrderStatus.COMPLETED);
+		User courier = userDao.getByUsername(new User(found.getCourierName()));
+		for (Order o : courier.getCourierOrders()) {
+			if (o.getId().equals(found.getId()))
+				o.setStatus(found.getStatus());
+		}
+		userDao.updateUser(courier);
 		return orderRepo.save(found);
 	}
 
@@ -67,13 +80,16 @@ public class OrderDao implements OrderDaoI {
 		if (!found.getStatus().equals(OrderStatus.CANCEL_REQUESTED))
 			if (found.getStatus().equals(OrderStatus.PROCESSING))
 				return requestCancellation(order);
-		found.setStatus(OrderStatus.CANCELLED);
 		// !!!!!!!!!!!!!!!!!!!!!!!!
 		found.getProducts().stream().forEach(x -> {
 			Product prod = prodDao.getByName(x.getProduct());
 			prod.setStock(prod.getStock() + x.getQuant());
 			prodDao.updateProduct(prod);
 		});
+		User courier = userDao.getByUsername(new User(found.getCourierName()));
+		courier.getCourierOrders().remove(found);
+		found.setStatus(OrderStatus.CANCELLED);
+		userDao.saveUser(courier);
 		// !!!!!!!!!!!!!!!!!!!!!!!!
 		return orderRepo.save(found);
 	}
@@ -87,6 +103,12 @@ public class OrderDao implements OrderDaoI {
 		if (!found.getStatus().equals(OrderStatus.PROCESSING))
 			return null;
 		found.setStatus(OrderStatus.CANCEL_REQUESTED);
+		User courier = userDao.getByUsername(new User(found.getCourierName()));
+		for (Order o : courier.getCourierOrders()) {
+			if (o.getId().equals(found.getId()))
+				o.setStatus(found.getStatus());
+		}
+		userDao.saveUser(courier);
 		return orderRepo.save(found);
 	}
 

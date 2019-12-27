@@ -33,6 +33,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		builder.password(user.getPassword());
 		if (user.getUserType().equals(UserType.ADMIN))
 			builder.roles("ADMIN");
+		else if (user.getUserType().equals(UserType.COURIER))
+			builder.roles("COURIER");
 		else
 			builder.roles("USER");
 		return builder.build();
