@@ -19,20 +19,20 @@ import com.project.entities.UserType;
 import com.project.exceptions.InvalidArgumentsException;
 import com.project.repos.UserRepository;
 import com.project.services.distributionstrategies.DistributionStrategy;
-import com.project.services.interfaces.OrderDaoI;
-import com.project.services.interfaces.ProductDaoI;
-import com.project.services.interfaces.UserDaoI;
+import com.project.services.interfaces.OrderServiceI;
+import com.project.services.interfaces.ProductServiceI;
+import com.project.services.interfaces.UserServiceI;
 
 @Service
-public class UserDao implements UserDaoI {
+public class UserService implements UserServiceI {
 	@Autowired
 	private UserRepository userRepo;
 
 	@Autowired
-	private ProductDaoI productDao;
+	private ProductServiceI productDao;
 
 	@Autowired
-	private OrderDaoI orderDao;
+	private OrderServiceI orderDao;
 
 	@Override
 	public List<User> getByRole(UserType role) {

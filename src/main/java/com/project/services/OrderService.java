@@ -14,21 +14,22 @@ import com.project.entities.UserType;
 import com.project.repos.OrderRepository;
 import com.project.services.distributionstrategies.DistributionStrategy;
 import com.project.services.distributionstrategies.LeastOrdersStrategy;
-import com.project.services.interfaces.OrderDaoI;
-import com.project.services.interfaces.ProductDaoI;
-import com.project.services.interfaces.UserDaoI;
+import com.project.services.distributionstrategies.LeastOrdersinCityStrategy;
+import com.project.services.interfaces.OrderServiceI;
+import com.project.services.interfaces.ProductServiceI;
+import com.project.services.interfaces.UserServiceI;
 
 @Service
-public class OrderDao implements OrderDaoI {
+public class OrderService implements OrderServiceI {
 
 	@Autowired
 	private OrderRepository orderRepo;
 
 	@Autowired
-	private ProductDaoI prodDao;
+	private ProductServiceI prodDao;
 
 	@Autowired
-	private UserDaoI userDao;
+	private UserServiceI userDao;
 
 	@Override
 	public Order createOrder(User user, Address address) {
@@ -44,7 +45,12 @@ public class OrderDao implements OrderDaoI {
 		else
 			o = new Order(user, address);
 		o.setStatus(OrderStatus.PROCESSING);
-		DistributionStrategy strategy = new LeastOrdersStrategy();
+		DistributionStrategy strategy;
+		if (userDao.getAll().stream().anyMatch(x -> x.getAddress().getCity().equals(address.getCity()))) {
+			strategy = new LeastOrdersinCityStrategy();
+		} else {
+			strategy = new LeastOrdersStrategy();
+		}
 		o.setCourierName(strategy.selectCourier(o, userDao.getByRole(UserType.COURIER)).getUsername());
 		o = orderRepo.save(o);
 		userDao.addCourierOrder(strategy, o);

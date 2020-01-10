@@ -6,7 +6,7 @@ import com.project.entities.Product;
 import com.project.entities.Review;
 import com.project.entities.User;
 
-public interface ReviewDaoI {
+public interface ReviewServiceI {
 
 	List<Review> getAllActiveForProduct(Product product);
 

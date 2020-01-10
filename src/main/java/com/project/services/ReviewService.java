@@ -10,10 +10,10 @@ import com.project.entities.Product;
 import com.project.entities.Review;
 import com.project.entities.User;
 import com.project.repos.ReviewRepository;
-import com.project.services.interfaces.ReviewDaoI;
+import com.project.services.interfaces.ReviewServiceI;
 
 @Service
-public class ReviewDao implements ReviewDaoI {
+public class ReviewService implements ReviewServiceI {
 
 	@Autowired
 	private ReviewRepository revRepo;

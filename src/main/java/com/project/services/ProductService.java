@@ -17,21 +17,21 @@ import com.project.entities.Product;
 import com.project.entities.Provider;
 import com.project.entities.Status;
 import com.project.repos.ProductRepository;
-import com.project.services.interfaces.CategoryDaoI;
-import com.project.services.interfaces.ProductDaoI;
-import com.project.services.interfaces.ProviderDaoI;
+import com.project.services.interfaces.CategoryServiceI;
+import com.project.services.interfaces.ProductServiceI;
+import com.project.services.interfaces.ProviderServiceI;
 
 @Service
-public class ProductDao implements ProductDaoI {
+public class ProductService implements ProductServiceI {
 
 	@Autowired
 	private ProductRepository prodRepo;
 
 	@Autowired
-	private CategoryDaoI catDao;
+	private CategoryServiceI catDao;
 
 	@Autowired
-	private ProviderDaoI provDao;
+	private ProviderServiceI provDao;
 
 	@Override
 	public Product saveProductWithImage(Product product, MultipartFile file) throws IOException {

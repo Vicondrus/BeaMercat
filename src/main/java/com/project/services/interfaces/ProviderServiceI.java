@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.project.entities.Provider;
 
-public interface ProviderDaoI {
+public interface ProviderServiceI {
 
 	List<Provider> getAll();
 

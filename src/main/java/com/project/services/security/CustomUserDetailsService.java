@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import com.project.entities.Status;
 import com.project.entities.User;
 import com.project.entities.UserType;
-import com.project.services.UserDao;
+import com.project.services.UserService;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
-	private UserDao userDao;
+	private UserService userDao;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

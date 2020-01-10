@@ -10,16 +10,16 @@ import com.project.entities.Category;
 import com.project.entities.Product;
 import com.project.entities.Status;
 import com.project.repos.CategoryRepository;
-import com.project.services.interfaces.CategoryDaoI;
+import com.project.services.interfaces.CategoryServiceI;
 
 @Service
-public class CategoryDao implements CategoryDaoI {
+public class CategoryService implements CategoryServiceI {
 
 	@Autowired
 	private CategoryRepository catRepo;
 
 	@Autowired
-	private ProductDao prodDao;
+	private ProductService prodDao;
 
 	@Transactional
 	@Override

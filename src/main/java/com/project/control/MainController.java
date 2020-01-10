@@ -28,45 +28,56 @@ import com.project.entities.Status;
 import com.project.entities.User;
 import com.project.entities.UserType;
 import com.project.exceptions.InvalidArgumentsException;
-import com.project.services.interfaces.CategoryDaoI;
-import com.project.services.interfaces.OrderDaoI;
-import com.project.services.interfaces.ProductDaoI;
-import com.project.services.interfaces.ProviderDaoI;
-import com.project.services.interfaces.ReviewDaoI;
-import com.project.services.interfaces.UserDaoI;
+import com.project.services.interfaces.CategoryServiceI;
+import com.project.services.interfaces.OrderServiceI;
+import com.project.services.interfaces.ProductServiceI;
+import com.project.services.interfaces.ProviderServiceI;
+import com.project.services.interfaces.ReviewServiceI;
+import com.project.services.interfaces.UserServiceI;
 
+//the controller from the MVC architecture pattern
 @Controller
 public class MainController {
 
+	//spring will instantiate the autowired fields at runtime
+	
 	@Autowired
-	private UserDaoI userDao;
+	private UserServiceI userDao;
 
 	@Autowired
-	private CategoryDaoI categoryDao;
+	private CategoryServiceI categoryDao;
 
 	@Autowired
-	private ProductDaoI productDao;
+	private ProductServiceI productDao;
 
 	@Autowired
-	private ProviderDaoI providerDao;
+	private ProviderServiceI providerDao;
 
 	@Autowired
-	private OrderDaoI orderDao;
+	private OrderServiceI orderDao;
 
 	@Autowired
-	private ReviewDaoI reviewDao;
+	private ReviewServiceI reviewDao;
+	
+	//methods that handle GET and POST requests
 
+	//the method that discards the items in the cart before logging out
+	
 	@GetMapping("/logoutAndEmpty")
 	public String getLogout(Principal principal) {
 		User u = userDao.getByUsername(new User(principal.getName()));
 		userDao.discardCartAndRestock(u);
 		return "redirect:/logout";
 	}
+	
+	//the method that returns the page necessary for category creation
 
 	@GetMapping("/admin/addCategory")
 	public String getAddNewCategory() {
 		return "addCategory";
 	}
+	
+	//the method that handles creation of a new category
 
 	@PostMapping("/admin/addCategoryAux")
 	public String postAddNewCategory(Category category, BindingResult result) {
@@ -74,11 +85,15 @@ public class MainController {
 		categoryDao.saveCategory(category);
 		return "redirect:/admin/listCategories";
 	}
+	
+	//the method that returns the page necessary for provider creation
 
 	@GetMapping("/admin/addProvider")
 	public String getAddNewProvider() {
 		return "addProvider";
 	}
+	
+	//the method that handles creation of a new provider
 
 	@PostMapping("/admin/addProviderAux")
 	public String postAddNewProvider(Provider provider, Address address, BindingResult result) {
@@ -87,6 +102,8 @@ public class MainController {
 		providerDao.saveProvider(provider);
 		return "redirect:/admin/listProviders";
 	}
+	
+	//the method that returns the page necessary for product creation
 
 	@GetMapping("/admin/addProduct")
 	public String getAddNewProduct(ModelMap map) {
@@ -96,6 +113,8 @@ public class MainController {
 				providerDao.getAllActive().stream().map(Provider::getName).collect(Collectors.toList()));
 		return "addProduct";
 	}
+	
+	//the method that handles creation of a new product
 
 	@PostMapping("/admin/addProductAux")
 	public String postAddNewProduct(Product product, BindingResult result, String category, String provider,
@@ -115,16 +134,23 @@ public class MainController {
 			}
 		return "redirect:/admin/listProducts";
 	}
+	
+	//the method that returns the page necessary for user creation
+	//for the admin type of user
 
 	@GetMapping("/admin/addUser")
 	public String getAdminAddNewUser() {
 		return "redirect:/addUser";
 	}
 
+	//the method that returns the page necessary for user registration
+	
 	@GetMapping("/addUser")
 	public String getAddNewUser() {
 		return "addUser";
 	}
+	
+	//the method that handles creation of a new user
 
 	@PostMapping("/addUserAux")
 	public String postAddNewUser(User user, Address address, BindingResult result) {
@@ -134,12 +160,18 @@ public class MainController {
 		userDao.saveUser(user);
 		return "home";
 	}
+	
+	//method handling retrieval of all users
+	//returns a page that lists all users
 
 	@GetMapping("/admin/listAllUsers")
 	public String getListAllUsers(ModelMap map) {
 		map.addAttribute("list", userDao.getAll());
 		return "showAllUsers";
 	}
+	
+	//method retrieving a product
+	//returns a page with the product presentation
 
 	@GetMapping("/user/viewProduct")
 	public String getViewProduct(ModelMap map, String id, Principal principal) {
@@ -157,18 +189,23 @@ public class MainController {
 		return "showProduct";
 	}
 	
+	//method responsible for adding a review to a product
+	
 	@PostMapping("/user/addReview")
 	public String postAddReview(Review review) {
 		reviewDao.saveReview(review);
-		
 		return "redirect:/user/viewProduct?id="+review.getProductId();
 	}
+	
+	//method responsible for modifying a review of a product
 	
 	@PostMapping("/user/modifyReview")
 	public String postModifyReview(Review review) {
 		reviewDao.updateReview(review);
 		return "redirect:/user/viewProduct?id="+review.getProductId();
 	}
+	
+	//method responsible for deleting a review from a product
 	
 	@PostMapping("/user/deleteReview")
 	public String postDeleteReview(Review review) {
@@ -186,6 +223,8 @@ public class MainController {
 		return "redirect:/listAllProducts";
 	}
 
+	//method that returns the checkout page with the order's details
+	
 	@GetMapping("/user/checkout")
 	public String getCheckout(ModelMap map, Principal principal) {
 		ShoppingCart sc = userDao.getByUsername(new User(principal.getName())).getShoppingCart();
@@ -194,24 +233,32 @@ public class MainController {
 		map.addAttribute("list", p);
 		return "checkout";
 	}
+	
+	//method responsible for placing an order
 
 	@PostMapping("/user/checkoutAux")
 	public String postCheckout(Address address, Principal principal) {
 		userDao.placeOrder(new User(principal.getName()), address);
 		return "redirect:/user/listOrders";
 	}
+	
+	//method that returns the order completion page
 
 	@GetMapping("/courier/completeOrder")
 	public String getCompleteOrder(String id, ModelMap map) {
 		map.addAttribute("order", orderDao.getById(new Order(id)));
 		return "completeOrder";
 	}
+	
+	//method responsible for changing the order's status to completed
 
 	@PostMapping("/completeOrderAux")
 	public String postCompleteOrder(String id) {
 		orderDao.completeOrder(new Order(id));
 		return "redirect:/courier/viewOrders";
 	}
+	
+	//method that returns a page with all an user's orders (logged in)
 
 	@GetMapping("/user/listOrders")
 	public String getUserListOrders(ModelMap map, Principal principal) {
@@ -219,41 +266,56 @@ public class MainController {
 		return "listOrders";
 	}
 
+	//method that returns a page with all the orders
+	
 	@GetMapping("/admin/listOrders")
 	public String getAdminListOrders(ModelMap map, Principal principal) {
 		map.addAttribute("list", orderDao.getAll());
 		return "listOrders";
 	}
+	
+	//method responsible for retrieving orders for a given user
 
 	@PostMapping("/listOrdersAux")
 	public String postAdminListOrders(String username, ModelMap map) {
 		map.addAttribute("list", orderDao.getByCustomer(new User(username)));
 		return "listOrders";
 	}
+	
+	//method that returns a page with an order's details
+	//for an user
 
 	@GetMapping("/user/viewOrder")
 	public String getUserViewOrder(String id, ModelMap map) {
 		map.addAttribute("order", orderDao.getById(new Order(id)));
 		return "inspectOrder";
 	}
+	
+	//order page for an admin
 
 	@GetMapping("/admin/viewOrder")
 	public String getAdminViewOrder(String id, ModelMap map) {
 		map.addAttribute("order", orderDao.getById(new Order(id)));
 		return "inspectOrder";
 	}
+	
+	//user method responsible for retrieving a page used for canceling orders
 
 	@GetMapping("/user/cancelOrder")
 	public String getUserCancelOrder(String id, ModelMap map) {
 		map.addAttribute("order", orderDao.getById(new Order(id)));
 		return "cancelOrder";
 	}
+	
+	//admin method responsible for adding a review to a product
 
 	@GetMapping("/admin/cancelOrder")
 	public String getAdminCancelOrder(String id, ModelMap map) {
 		map.addAttribute("order", orderDao.getById(new Order(id)));
 		return "cancelOrder";
 	}
+	
+	//method responsible for canceling an order
 
 	@PostMapping("/cancelOrderAux")
 	public String postCancelOrder(String id, Principal principal) {

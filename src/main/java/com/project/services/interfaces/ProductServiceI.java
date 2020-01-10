@@ -9,7 +9,7 @@ import com.project.entities.Category;
 import com.project.entities.Product;
 import com.project.entities.Provider;
 
-public interface ProductDaoI {
+public interface ProductServiceI {
 
 	public Product saveProduct(Product product);
 

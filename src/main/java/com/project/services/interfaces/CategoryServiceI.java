@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.project.entities.Category;
 
-public interface CategoryDaoI {
+public interface CategoryServiceI {
 	
 	public Category saveCategory(Category category);
 	

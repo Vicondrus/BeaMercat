@@ -6,7 +6,7 @@ import com.project.entities.Address;
 import com.project.entities.Order;
 import com.project.entities.User;
 
-public interface OrderDaoI {
+public interface OrderServiceI {
 
 	Order createOrder(User user, Address address);
 

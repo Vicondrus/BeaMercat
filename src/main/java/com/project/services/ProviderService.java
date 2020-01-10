@@ -10,16 +10,16 @@ import com.project.entities.Product;
 import com.project.entities.Provider;
 import com.project.entities.Status;
 import com.project.repos.ProviderRepository;
-import com.project.services.interfaces.ProviderDaoI;
+import com.project.services.interfaces.ProviderServiceI;
 
 @Service
-public class ProviderDao implements ProviderDaoI {
+public class ProviderService implements ProviderServiceI {
 
 	@Autowired
 	private ProviderRepository provRepo;
 
 	@Autowired
-	private ProductDao prodDao;
+	private ProductService prodDao;
 
 	@Transactional
 	@Override

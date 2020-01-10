@@ -11,7 +11,7 @@ import com.project.entities.UserType;
 import com.project.exceptions.InvalidArgumentsException;
 import com.project.services.distributionstrategies.DistributionStrategy;
 
-public interface UserDaoI {
+public interface UserServiceI {
 
 	User saveUser(User user);
 	

@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+//scan the project's packages for specific components
 @SpringBootApplication
 @EntityScan("com.project.entities")
 @EnableMongoRepositories("com.project.repos")
