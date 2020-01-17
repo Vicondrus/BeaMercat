@@ -1,9 +1,16 @@
 package com.project.entities;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+//document, found in the database
+//entity that holds relevant data for a user
+//note that the tree types of users are merged into one
+//the database will not hold null fields (ex: an admin will have a 
+//null shoppingcart and orders list which will not appear in the databases)
 
 @Document
 public class User {
@@ -178,6 +185,11 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", email=" + email + "]";
+	}
+
+	public List<Order> getProcessingOrders() {
+		return courierOrders.stream().filter(x -> x.getStatus().equals(OrderStatus.PROCESSING))
+				.collect(Collectors.toList());
 	}
 
 }

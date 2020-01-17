@@ -19,18 +19,30 @@ import com.project.services.interfaces.OrderServiceI;
 import com.project.services.interfaces.ProductServiceI;
 import com.project.services.interfaces.UserServiceI;
 
+//service class that wraps the data access for order
+//and provides application logic
+
 @Service
 public class OrderService implements OrderServiceI {
 
+	//repository bean instantiated at runtime
 	@Autowired
 	private OrderRepository orderRepo;
 
+	//service beans
 	@Autowired
 	private ProductServiceI prodDao;
 
 	@Autowired
 	private UserServiceI userDao;
 
+	//strategy
+	private DistributionStrategy strategy;
+
+	
+	//adds a new order to the database
+	//sends it to the courier selecting the strategy
+	//and checks logic
 	@Override
 	public Order createOrder(User user, Address address) {
 		if (user == null)
@@ -40,23 +52,33 @@ public class OrderService implements OrderServiceI {
 		Order o;
 		if (address.getCountry() == null || address.getCountry().equals("") || address.getCity() == null
 				|| address.getCity().equals("") || address.getStreet() == null || address.getStreet().equals("")
-				|| address.getNumber() == null || address.getZipCode() == null || address.getZipCode().equals(""))
+				|| address.getNumber() == null || address.getZipCode() == null || address.getZipCode().equals("")) {
 			o = new Order(user, user.getAddress());
-		else
+			address = o.getAddress();
+		} else
 			o = new Order(user, address);
 		o.setStatus(OrderStatus.PROCESSING);
-		DistributionStrategy strategy;
-		if (userDao.getAll().stream().anyMatch(x -> x.getAddress().getCity().equals(address.getCity()))) {
-			strategy = new LeastOrdersinCityStrategy();
-		} else {
-			strategy = new LeastOrdersStrategy();
-		}
+		selectStrategy(address);
 		o.setCourierName(strategy.selectCourier(o, userDao.getByRole(UserType.COURIER)).getUsername());
 		o = orderRepo.save(o);
 		userDao.addCourierOrder(strategy, o);
 		return o;
 	}
 
+	//strategy selector function
+	private void selectStrategy(Address address) {
+		for (User u : userDao.getByRole(UserType.COURIER)) {
+			if (u.getAddress().getCity().equals(address.getCity())) {
+				strategy = new LeastOrdersinCityStrategy();
+				return;
+			}
+		}
+		strategy = new LeastOrdersStrategy();
+
+	}
+
+	
+	//changes the order's status to COMPLETED
 	@Override
 	public Order completeOrder(Order order) {
 		if (order == null)
@@ -76,6 +98,8 @@ public class OrderService implements OrderServiceI {
 		return orderRepo.save(found);
 	}
 
+	//changes the order status to CANCELED
+	//done by the admin
 	@Override
 	public Order cancelOrder(Order order) {
 		if (order == null)
@@ -93,13 +117,19 @@ public class OrderService implements OrderServiceI {
 			prodDao.updateProduct(prod);
 		});
 		User courier = userDao.getByUsername(new User(found.getCourierName()));
-		courier.getCourierOrders().remove(found);
 		found.setStatus(OrderStatus.CANCELLED);
-		userDao.saveUser(courier);
+		for (Order o : courier.getCourierOrders()) {
+			if (o.getId().equals(found.getId()))
+				o.setStatus(found.getStatus());
+			;
+		}
+		userDao.updateUser(courier);
 		// !!!!!!!!!!!!!!!!!!!!!!!!
 		return orderRepo.save(found);
 	}
 
+	//request cancellation method
+	//done by user
 	private Order requestCancellation(Order order) {
 		if (order == null)
 			return null;
@@ -114,10 +144,11 @@ public class OrderService implements OrderServiceI {
 			if (o.getId().equals(found.getId()))
 				o.setStatus(found.getStatus());
 		}
-		userDao.saveUser(courier);
+		userDao.updateUser(courier);
 		return orderRepo.save(found);
 	}
 
+	//update the order's details
 	@Override
 	public Order updateOrder(Order order) {
 		if (order == null)

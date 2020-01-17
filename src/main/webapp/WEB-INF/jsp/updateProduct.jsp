@@ -55,9 +55,10 @@
 					List<String> auxw = (List<String>) request.getAttribute("providers");
 					listw.addAll(auxw);
 					for (String a : listw) {
-				%><option value="<%out.print(a);%>"<%if (product.getProvider().getName().equals(a)) {
+				%><option value="<%out.print(a);%>"
+					<%if (product.getProvider().getName().equals(a)) {
 					out.print("selected");
-				}%>">
+				}%>>
 					<%
 						out.print(a);
 						}

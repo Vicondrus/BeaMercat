@@ -12,6 +12,9 @@ import com.project.entities.User;
 import com.project.repos.ReviewRepository;
 import com.project.services.interfaces.ReviewServiceI;
 
+//service class that wraps the data access for review
+//and provides application logic
+
 @Service
 public class ReviewService implements ReviewServiceI {
 

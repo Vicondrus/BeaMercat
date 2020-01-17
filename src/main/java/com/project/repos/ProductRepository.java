@@ -9,8 +9,14 @@ import com.project.entities.Product;
 import com.project.entities.Provider;
 import com.project.entities.Status;
 
+//data access object interface for product
+//implementation provided by spring
+
+
 public interface ProductRepository extends MongoRepository<Product, String> {
 
+	//custom methods, implemented by spring, using reflection
+	
 	public Product findByName(String name);
 
 	public List<Product> findAllByCategory(Category category);

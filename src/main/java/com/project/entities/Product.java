@@ -4,6 +4,10 @@ import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+//the product entity, holds data about a product found in the store's stock
+//note the image field, represented as a binary
+//also in the database as a document
+
 @Document
 public class Product implements Comparable<Product> {
 

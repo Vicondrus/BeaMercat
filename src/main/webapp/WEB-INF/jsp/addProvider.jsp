@@ -10,6 +10,14 @@
 </head>
 <body>
 
+	<c:if test="${param.error != null}">
+		<div class="alert">
+			<span class="closebtn"
+				onclick="this.parentElement.style.display='none';">&times;</span>
+			${param.error}
+		</div>
+	</c:if>
+
 	<form action="/admin/addProviderAux" method="POST">
 		<div class="container">
 			<h1>Create Provider</h1>

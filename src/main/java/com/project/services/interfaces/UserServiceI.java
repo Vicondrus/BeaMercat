@@ -13,7 +13,7 @@ import com.project.services.distributionstrategies.DistributionStrategy;
 
 public interface UserServiceI {
 
-	User saveUser(User user);
+	User saveUser(User user) throws InvalidArgumentsException;
 	
 	User updateUser(User user);
 	

@@ -33,6 +33,10 @@
 			${param.error}
 		</div>
 	</c:if>
+	
+	<c:if test="${empty list}">
+		<h2>Shopping Cart is Empty :(</h2>
+	</c:if>
 
 	<c:if test="${not empty list}">
 		<table style="width: 100%" id="myTable">

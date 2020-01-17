@@ -3,6 +3,9 @@ package com.project.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+//the category entity, found as a document in the database
+//encompasses all relevant data of a category (just the name)
+
 @Document
 public class Category {
 

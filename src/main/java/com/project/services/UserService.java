@@ -2,6 +2,8 @@ package com.project.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,9 @@ import com.project.services.interfaces.OrderServiceI;
 import com.project.services.interfaces.ProductServiceI;
 import com.project.services.interfaces.UserServiceI;
 
+//service class that wraps the data access for user
+//and provides application logic
+
 @Service
 public class UserService implements UserServiceI {
 	@Autowired
@@ -33,20 +38,40 @@ public class UserService implements UserServiceI {
 
 	@Autowired
 	private OrderServiceI orderDao;
+	
+	//methods for adding, deleting, updating and retrieving products from the database
+	//with additional, corresponding application logic
+
+	private boolean isValidPhone(String s) {
+		Pattern p = Pattern.compile("^\\+(?:[0-9] ?){6,14}[0-9]$");
+
+		Matcher m = p.matcher(s);
+		return (m.find() && m.group().equals(s));
+	}
 
 	@Override
 	public List<User> getByRole(UserType role) {
 		return userRepo.findByUserType(role);
 	}
 
+	
+	//logic needed to save the user with their corresponding fields
+	//according to their type
+	//the fields that are not used for a certain user are left null
+	//they do not appear in the database
+	//the usernames are unique
 	@Transactional
 	@Override
-	public User saveUser(User user) {
+	public User saveUser(User user) throws InvalidArgumentsException {
 		if (user == null)
 			return null;
+		if (!isValidPhone(user.getTelephone()))
+			throw new InvalidArgumentsException("Telephone number not valid");
+		if(user.getAddress().getNumber()<0)
+			throw new InvalidArgumentsException("Address number not valid");
 		user.setUsername(user.getUsername().trim());
 		if (userRepo.findByUsername(user.getUsername()) != null)
-			return null;
+			throw new InvalidArgumentsException("Username already exists");
 		if (user.getUserType() == null)
 			user.setUserType(UserType.CUSTOMER);
 		if (user.getUserType().equals(UserType.CUSTOMER) && user.getShoppingCart() == null)
@@ -63,6 +88,9 @@ public class UserService implements UserServiceI {
 		return userRepo.findAll();
 	}
 
+	
+	//updating the user
+	//logic needed to convert a user from one type to another
 	@Transactional
 	@Override
 	public User updateUser(User user) {
@@ -132,11 +160,15 @@ public class UserService implements UserServiceI {
 		}
 	}
 
+	//methods needed for the customer
+	//responsible for shopping cart operations
 	@Override
 	public ShoppingCart addToCart(User user, Product product, Integer quant) throws InvalidArgumentsException {
 		Product found = productDao.getByName(product);
 		if (quant < 1)
 			throw new InvalidArgumentsException("The quantity should be a number greater than zero");
+		if (found.getStock() < quant)
+			throw new InvalidArgumentsException("The quantity exceeds the stock");
 		removeFromCart(user, product);
 		found.setStock(found.getStock() - quant);
 		User u = getByUsername(user);
@@ -175,6 +207,7 @@ public class UserService implements UserServiceI {
 		}
 	}
 
+	//responsible for order operations
 	@Override
 	public Order placeOrder(User user, Address address) {
 		if (user == null)
@@ -209,6 +242,8 @@ public class UserService implements UserServiceI {
 		return u.getShoppingCart();
 	}
 
+	
+	//method that updates the courer's order list
 	@Override
 	public User addCourierOrder(DistributionStrategy strategy, Order order) {
 		List<User> couriers = getByRole(UserType.COURIER);

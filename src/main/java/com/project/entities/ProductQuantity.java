@@ -1,5 +1,8 @@
 package com.project.entities;
 
+//helper class, not found in the database as a separate document
+//used only to hold together in the shopping cart the product and its corresponding quantity
+
 public class ProductQuantity {
 
 	private Product product;
@@ -9,6 +12,9 @@ public class ProductQuantity {
 	public ProductQuantity() {
 		super();
 	}
+	
+	//two such objects are equal if they represent the same product
+	//quantity doesn't matter
 
 	@Override
 	public int hashCode() {

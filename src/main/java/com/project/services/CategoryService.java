@@ -12,6 +12,9 @@ import com.project.entities.Status;
 import com.project.repos.CategoryRepository;
 import com.project.services.interfaces.CategoryServiceI;
 
+//service class that wraps the data access for category
+//and provides application logic
+
 @Service
 public class CategoryService implements CategoryServiceI {
 
@@ -20,6 +23,9 @@ public class CategoryService implements CategoryServiceI {
 
 	@Autowired
 	private ProductService prodDao;
+	
+	//methods for adding, deleting, updating and retrieving categories from the database
+	//with additional, corresponding application logic
 
 	@Transactional
 	@Override

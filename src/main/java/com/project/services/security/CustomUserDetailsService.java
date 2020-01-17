@@ -12,6 +12,8 @@ import com.project.entities.User;
 import com.project.entities.UserType;
 import com.project.services.UserService;
 
+//service class building a user
+//check the credentials for a user at login
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

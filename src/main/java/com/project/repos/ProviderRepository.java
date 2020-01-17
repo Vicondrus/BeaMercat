@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.project.entities.Provider;
 import com.project.entities.Status;
 
+//data access object interface for provider
+//implementation provided by spring
+
 @Repository
 public interface ProviderRepository extends MongoRepository<Provider, String> {
 

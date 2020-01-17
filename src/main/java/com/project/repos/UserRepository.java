@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.project.entities.User;
 import com.project.entities.UserType;
 
+//data access object interface for user
+//implementation provided by spring
+
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 

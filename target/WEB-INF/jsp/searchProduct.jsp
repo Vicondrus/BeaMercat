@@ -72,13 +72,13 @@
 						<td>${listValue.productStatus}</td>
 					</c:if>
 					<td><c:if test="${isUser}">
-							<a href="user/viewProduct?id=${listValue.id}">Details</a>
+							<a href="/user/viewProduct?id=${listValue.id}">Details</a>
 						</c:if> <c:if test="${isAdmin}">
-							<a href="admin/viewProduct?id=${listValue.id}">Details</a>
+							<a href="/admin/viewProduct?id=${listValue.id}">Details</a>
 							<a> | </a>
-							<a href="admin/updateProduct?id=${listValue.id}">Update</a>
+							<a href="/admin/updateProduct?id=${listValue.id}">Update</a>
 							<a> | </a>
-							<a href="admin/deleteProduct?id=${listValue.id}">Delete</a>
+							<a href="/admin/deleteProduct?id=${listValue.id}">Delete</a>
 						</c:if>
 				</tr>
 			</c:forEach>

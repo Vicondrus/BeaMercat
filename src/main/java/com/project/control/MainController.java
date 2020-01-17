@@ -99,7 +99,11 @@ public class MainController {
 	public String postAddNewProvider(Provider provider, Address address, BindingResult result) {
 		provider.setProviderStatus(Status.ACTIVE);
 		provider.setAddress(address);
-		providerDao.saveProvider(provider);
+		try {
+			providerDao.saveProvider(provider);
+		} catch (InvalidArgumentsException e) {
+			return "redirect:/admin/addProvider?error"+e.getMessage().replace(" ", "%20");
+		}
 		return "redirect:/admin/listProviders";
 	}
 	
@@ -157,7 +161,11 @@ public class MainController {
 		if (result.hasFieldErrors())
 			System.out.println("Something went wrong creating the user");
 		user.setAddress(address);
-		userDao.saveUser(user);
+		try {
+			userDao.saveUser(user);
+		} catch (InvalidArgumentsException e) {
+			return "redirect:/addUser?error="+e.getMessage().replace(" ", "%20");
+		}
 		return "home";
 	}
 	
@@ -325,11 +333,13 @@ public class MainController {
 			return "redirect:/admin/listOrders";
 		return "redirect:/user/listOrders";
 	}
-
+	
 	@GetMapping("/user/searchProduct")
 	public String getSearchProduct() {
 		return "searchProduct";
 	}
+	
+	//method that retrieves the products with similar names and returns the page showing them
 
 	@PostMapping("/user/searchProductAux")
 	public String postSearchProduct(String name, ModelMap map) {
@@ -350,6 +360,8 @@ public class MainController {
 		return "searchByCategory";
 	}
 
+	//method that retrieves all the products of a given category and shows the in a table
+	
 	@PostMapping("/user/searchByCategoryAux")
 	public String postSearchByCategory(ModelMap map, String cat) {
 		map.addAttribute("cats",
@@ -371,6 +383,8 @@ public class MainController {
 		return "searchByProvider";
 	}
 
+	//this method retrieves the products with the given provider an sends them to the browser
+	
 	@PostMapping("/user/searchByProviderAux")
 	public String postSearchByProvider(ModelMap map, String prov) {
 		map.addAttribute("provs",
@@ -390,6 +404,8 @@ public class MainController {
 		return "redirect: /main";
 	}
 
+	//method that retrieves all products and sends the to the browser
+	
 	@GetMapping("/listAllProducts")
 	public String getListAllProducts(ModelMap map, Principal principal) {
 		List<Product> p;
@@ -406,6 +422,8 @@ public class MainController {
 		return "showAllProducts";
 	}
 
+	//method that retrieves user details and sends them to the browser accordingly
+	
 	@GetMapping("/user/viewUser")
 	public String getUserViewUser(ModelMap map, Principal principal) {
 		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
@@ -417,6 +435,8 @@ public class MainController {
 		map.addAttribute("user", userDao.getByUsername(new User(principal.getName())));
 		return "customerViewUser";
 	}
+	
+	//methods used for updating users
 
 	@GetMapping("/user/updateUser")
 	public String getUserUpdateUser(ModelMap map, Principal principal) {
@@ -430,6 +450,8 @@ public class MainController {
 		return "updateUser";
 	}
 
+	//method that sets the new details using the UserService's updateUser() method
+	
 	@PostMapping("/updateUserAux")
 	public String postUpdateUserCommon(User user, Address address) {
 		user.setAddress(address);
@@ -437,6 +459,9 @@ public class MainController {
 		return "redirect:/main";
 	}
 
+	//method that retrieves the items and quantities found in the user's shopping cart and
+	//sends them to the browser
+	
 	@GetMapping("/user/viewShoppingCart")
 	public String getUserShoppingCart(ModelMap map, Principal principal) {
 		ShoppingCart sc = userDao.getByUsername(new User(principal.getName())).getShoppingCart();
@@ -451,6 +476,8 @@ public class MainController {
 		return "inspectShoppingCart";
 	}
 
+	//method that adds the corresponding item to the user's shopping cart
+	
 	@PostMapping("/user/addToShoppingCart")
 	public String postAddShoppingCart(String productId, Integer quantity, Principal principal) {
 		Product p = new Product();
@@ -488,6 +515,8 @@ public class MainController {
 	public String getRoot() {
 		return "redirect:/home";
 	}
+	
+	//the method retrieving the main page's components
 
 	@GetMapping("/main")
 	public String getAllUsers(ModelMap map, Principal principal) {
@@ -540,6 +569,8 @@ public class MainController {
 		return "redirect:/admin/listAllUsers";
 	}
 
+	//method retrieving product details and sending them to the browser
+	
 	@GetMapping("/admin/viewProduct")
 	public String getViewProductAdmin(ModelMap map, String id) {
 		Product aux = new Product();
@@ -551,6 +582,7 @@ public class MainController {
 		map.addAttribute("image", Base64.getEncoder().encodeToString(p.getImage().getData()));
 		return "showProduct";
 	}
+	
 
 	@GetMapping("/admin/updateProduct")
 	public String getUpdateProduct(ModelMap map, String id) {
@@ -568,6 +600,8 @@ public class MainController {
 		return "updateProduct";
 	}
 
+	//method updating product info
+	
 	@PostMapping("/admin/updateProductAux")
 	public String postUpdateProduct(ModelMap map, Product product, String category, String provider,
 			@RequestParam("img") MultipartFile image) {
@@ -645,7 +679,7 @@ public class MainController {
 	@GetMapping("/admin/viewCategory")
 	public String getViewCategory(ModelMap map, String name) {
 		map.addAttribute("category", categoryDao.findByName(new Category(name)));
-		return "viewCategory";
+		return "showCategory";
 	}
 
 	@GetMapping("/admin/updateCategory")

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+//security class
 @Configuration
 @EnableWebSecurity
 public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -26,6 +27,7 @@ public class LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 		return provider;
 	}
 
+	//configures pages accessible by all, by the admin, by the customer or by the courier
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/addUser", "/addUserAux", "/home").permitAll().antMatchers("/main")

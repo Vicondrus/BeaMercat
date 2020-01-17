@@ -3,6 +3,10 @@ package com.project.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+//POJO class
+//found as a sub-document in the user document
+//used to hold the products a user wants to buy at once
+
 public class ShoppingCart {
 
 	private List<ProductQuantity> products;

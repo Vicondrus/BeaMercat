@@ -3,6 +3,10 @@ package com.project.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+//document, found in the database
+//provider entity holding relevant data about a product provider
+//note address
+
 @Document
 public class Provider {
 

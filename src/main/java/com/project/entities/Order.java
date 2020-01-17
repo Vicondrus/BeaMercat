@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+//entity, also found in the database as a document, used for holding together all data
+//related to a certain order
+
 @Document
 public class Order {
 

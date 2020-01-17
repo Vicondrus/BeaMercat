@@ -5,6 +5,11 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+//used to hold data about the review
+//document in the database
+//productId and reviewerUsername link this document with other relevant documents from
+//the database
+
 @Document
 public class Review {
 

@@ -21,18 +21,29 @@ import com.project.services.interfaces.CategoryServiceI;
 import com.project.services.interfaces.ProductServiceI;
 import com.project.services.interfaces.ProviderServiceI;
 
+//service class that wraps the data access for product
+//and provides application logic
+
 @Service
 public class ProductService implements ProductServiceI {
 
+	//auto instantiated beans
+	//repository bean
 	@Autowired
 	private ProductRepository prodRepo;
 
+	//service beans
 	@Autowired
 	private CategoryServiceI catDao;
 
 	@Autowired
 	private ProviderServiceI provDao;
+	
+	//methods for adding, deleting, updating and retrieving products from the database
+	//with additional, corresponding application logic
 
+	
+	//method for saving a product that also has an image accompanying it
 	@Override
 	public Product saveProductWithImage(Product product, MultipartFile file) throws IOException {
 		if (product == null)
@@ -45,6 +56,7 @@ public class ProductService implements ProductServiceI {
 		return prodRepo.save(product);
 	}
 
+	//save a product without an image
 	@Override
 	public Product saveProduct(Product product) {
 		if (product == null)
@@ -70,6 +82,7 @@ public class ProductService implements ProductServiceI {
 		return prodRepo.findById(product.getId()).orElse(null);
 	}
 
+	//method that updates a product if an image is involved
 	@Override
 	public Product updateProductImage(Product product, MultipartFile file) throws IOException {
 		if (file == null)
@@ -119,7 +132,10 @@ public class ProductService implements ProductServiceI {
 	public List<Product> getAll() {
 		return prodRepo.findAll();
 	}
-
+	
+	
+	//method that retrieves, using a repo, products containing in their name
+	//a certain string
 	@Override
 	public List<Product> getAllActiveByNameLike(Product product) {
 		if (product == null)

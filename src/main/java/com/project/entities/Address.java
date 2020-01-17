@@ -1,5 +1,7 @@
 package com.project.entities;
 
+//POJO class that encompasses data related to addresses
+
 public class Address {
 	
 	private String country;
