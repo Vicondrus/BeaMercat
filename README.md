@@ -1,3 +1,5 @@
+#BeaMercat
+
 BeaMercat, the Software Engineering Course Semestrial Laboratory Project, simulates an e-commerce website with functionalities for
 customers, adimistrators and couriers.
 
